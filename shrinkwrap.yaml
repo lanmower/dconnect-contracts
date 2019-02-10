@@ -1,6 +1,6 @@
 dependencies:
   express: 4.16.4
-  freedomfirst: 1.1.7
+  freedomfirst: 1.1.8
 packages:
   /@nodeutils/defaults-deep/1.1.0:
     dependencies:
@@ -1341,7 +1341,7 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
-  /freedomfirst/1.1.7:
+  /freedomfirst/1.1.8:
     dependencies:
       async: 2.6.1
       dotenv: 6.2.0
@@ -1352,7 +1352,7 @@ packages:
     dev: false
     hasBin: true
     resolution:
-      integrity: sha512-0ajo2rqiFsaCIaVOBZMAAqAtHFYdKFZ1yhDShlSLKtPN36K3dZCtP4rJKvF6/rqLh5u4xlryc0XXRVSstswE0w==
+      integrity: sha512-iawL8/TezubR2lZIcm531pS2X5Py1WG3X3O/GMM/rHWm8y0xUOslvZuV1o/wuVaZTfczrL4LzVDPnl3n68hN2Q==
   /fresh/0.5.2:
     dev: false
     engines:
@@ -5293,4 +5293,4 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   express: ^4.16.4
-  freedomfirst: 1.1.7
+  freedomfirst: 1.1.8
