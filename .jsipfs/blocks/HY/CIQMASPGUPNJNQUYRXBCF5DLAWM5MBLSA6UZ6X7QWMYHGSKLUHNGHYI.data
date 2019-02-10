@@ -1,4 +1,5 @@
-<!-- This is a static file -->
+
+ìä<!-- This is a static file -->
 <!-- served from your routes in server.js -->
 
 <!-- You might want to try something fancier: -->
@@ -16,3 +17,4 @@
     I'm your example baby and now I'm up to date
   </body>
 </html>
+ä
