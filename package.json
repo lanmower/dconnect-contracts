@@ -8,9 +8,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
-  }, 
+  },
   "dependencies": {
-    "freedomfirst": "1.1.4"
+    "ipfs": "^0.34.4",
+    "express": "^4.16.4"
   },
   "engines": {
     "node": "8.x"
