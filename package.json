@@ -10,8 +10,10 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "ipfs": "^0.34.4",
     "express": "^4.16.4"
+  },
+  "devdependencies": {
+    "ipfs": "^0.34.4"
   },
   "engines": {
     "node": "8.x"
