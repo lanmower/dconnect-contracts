@@ -11,7 +11,7 @@
   },
   "dependencies": { 
     "express": "^4.16.4",
-    "freedomfirst": "1.1.7"
+    "freedomfirst": "1.1.8"
   }, 
   "devdependencies": { 
   },
