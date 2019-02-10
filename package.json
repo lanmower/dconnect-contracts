@@ -10,7 +10,7 @@
     "start": "node server.js"
   }, 
   "dependencies": {
-    "freedomfirst": "^4.16.4"
+    "freedomfirst": "1.1.4"
   },
   "engines": {
     "node": "8.x"
