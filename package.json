@@ -12,9 +12,9 @@
   "dependencies": {
     "express": "^4.16.4", 
     "freedomfirst": "latest"
-  },
+  }, 
   "devdependencies": {
-    "freedomfirst": "latest"
+    "freedomfirst": "1.1.6"
   },
   "engines": {
     "node": "8.x"
