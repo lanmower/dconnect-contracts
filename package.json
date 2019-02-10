@@ -7,13 +7,14 @@
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node ./node_modules/freedomfirst/index.js"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4", 
+    "freedomfirst": "latest"
   },
   "devdependencies": {
-    "ipfs": "^0.34.4"
+    "freedomfirst": "latest"
   },
   "engines": {
     "node": "8.x"
