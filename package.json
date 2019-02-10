@@ -10,11 +10,10 @@
     "start": "node ./node_modules/freedomfirst/index.js && node server.js"
   },
   "dependencies": {
-    "express": "^4.16.4", 
-    "freedomfirst": "latest"
+    "express": "^4.16.4",
+    "freedomfirst": "1.1.7"
   }, 
-  "devdependencies": {
-    "freedomfirst": "1.1.6"
+  "devdependencies": { 
   },
   "engines": {
     "node": "8.x"
