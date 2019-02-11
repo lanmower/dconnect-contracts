@@ -46,17 +46,19 @@ function includeHTMLTags() {
     if (file) {
       /* Make an HTTP request using the attribute value as the file name: */
       insertHTML(file, elmnt);
-      includeHTMLTags();
+      setTimeout(()=>{includeHTMLTags();}, 0);
       /* Exit the function: */
       return;
     }
     file = elmnt.getAttribute("w3-load-html");
+    
     if (file) {
       /* Make an HTTP request using the attribute value as the file name: */
       elmnt.onclick = ()=>{insertHTML(file, elmnt); return false;}
-      includeHTMLTags();
+      setTimeout(()=>{includeHTMLTags();}, 0);
       /* Exit the function: */
       return;
     }
   }
 }
+includeHTMLTags();
