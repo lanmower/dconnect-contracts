@@ -74,7 +74,9 @@ function includeHTMLTags() {
 }
 
 
-includeHTMLTags();
+window.addEventListener('load', function () {
+  includeHTMLTags();
+}, false);
 
 function insertScript ($script, callback) {
   var s = document.createElement('script')

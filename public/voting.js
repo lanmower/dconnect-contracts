@@ -186,7 +186,6 @@ this.eos.transaction({
   }
 
   buildTable(res) {
-    console.log(res);
     var table = document.getElementsByTagName('tbody')[0];
     const promoted = 'eosliquideos';
     this.countTotalVotes(res);
@@ -248,8 +247,7 @@ this.eos.transaction({
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
   createProgressBar(pct) {
-    return '<div class="progress-bar active float-left" role="progressbar" style="width:' + pct + '">&nbsp;</div>' +
-      '<span class="text-dark current-value">' + pct + '</span>';
+    return '<span>' + pct + '</span>';
   }
   cleanPercent(num) {
     return Math.round(num * 10000) / 100 + "%";
