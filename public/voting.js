@@ -98,13 +98,8 @@ this.eos.transaction({
     this.verifyScatter();
     this.working = true;
     return this.eos.transaction(tr => {
-      //	tr.delegatebw(accountName,accountName,"0.5 SYS","0.5 SYS",0);
       var accountName = this.name;
-      // return this.eos.contract('eosio').then(contract => {
-      // return contract.voteproducer(accountName,"",this.getSelectedBPs());
-
       return tr.voteproducer(accountName, "", this.getSelectedBPs());
-
     }).then(res => {
       document.getElementById("vote_button").disabled = false;
       this.voteSuccess(res);
@@ -142,21 +137,18 @@ this.eos.transaction({
   }
 
   voteSuccess(res) {
-    //otodo
     console.log(res);
     var msg = '<div class="alert alert-success">' + "Vote Successfully Submitted" + '</div>';
     document.getElementById("messages").innerHTML = msg;
   }
 
   voteError(res) {
-    //otodo
     console.log(res);
     var msg = '<div class="alert alert-danger">' + res.message + '</div>';
     document.getElementById("messages").innerHTML = msg;
   }
 
   populateBPs() {
-    // populate producer table
     return this.eosPublic.getTableRows({
       "json": true,
       "scope": 'eosio',
@@ -261,39 +253,6 @@ this.eos.transaction({
     return Math.round(num * 10000) / 100 + "%";
   }
 
-  timeDifference(previous) {
-    var msPerMinute = 60 * 1000;
-    var msPerHour = msPerMinute * 60;
-    var msPerDay = msPerHour * 24;
-    var msPerMonth = msPerDay * 30;
-    var msPerYear = msPerDay * 365;
-
-    var elapsed = (new Date().getTime()) - previous;
-
-    if (elapsed < msPerMinute) {
-      return Math.round(elapsed / 1000) + ' seconds ago';
-    }
-
-    else if (elapsed < msPerHour) {
-      return Math.round(elapsed / msPerMinute) + ' minutes ago';
-    }
-
-    else if (elapsed < msPerDay) {
-      return Math.round(elapsed / msPerHour) + ' hours ago';
-    }
-
-    else if (elapsed < msPerMonth) {
-      return 'approximately ' + Math.round(elapsed / msPerDay) + ' days ago';
-    }
-
-    else if (elapsed < msPerYear) {
-      return 'approximately ' + Math.round(elapsed / msPerMonth) + ' months ago';
-    }
-
-    else {
-      return 'approximately ' + Math.round(elapsed / msPerYear) + ' years ago';
-    }
-  }
   async load() {
     await this.verifyScatter();
 
@@ -310,11 +269,9 @@ this.eos.transaction({
       blockchain: 'eos',
       host: network.host,
       port:  network.port,
-      // httpEndpoint: "http" + (network.secured ? 's' : '') + '://'  + network.host + ':' + network.port,
       chainId: network.chainId,
       expireInSeconds: 120,
     }, Eos, {chainId:network.chainId}, network.secured ? 'https' : undefined);
-      //scatter.authenticate().then(()=>{
       return scatter.getIdentity(requiredFields).then(identity => {
         if (identity.accounts.length === 0) return
         var accountName = identity.accounts[0].name;
@@ -325,7 +282,6 @@ this.eos.transaction({
         inited = true;
 
       });
-      //  });
     });
   }
 }
