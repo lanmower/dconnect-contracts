@@ -170,6 +170,7 @@ this.eos.transaction({
 
     this.eosPublic = new Eos(config);
     this.populateBPs().then(res => {
+      console.log(res);
       this.buildTable(res);
     });
 
@@ -194,6 +195,7 @@ this.eos.transaction({
     ranked.sort((a, b) => Number(a.total_votes) > Number(b.total_votes) ? -1 : 1);
     sorted.sort((a, b) => a.owner === promoted ? -1 : b.owner === promoted ? 1 : Number(a.total_votes) > Number(b.total_votes) ? -1 : 1);
     ranked.forEach(function(item,index) {rankings[item.owner]=index+1;});
+    
     for (var i = 0; i < sorted.length; i++) {
       var row = sorted[i];
       var rowSanitized = sanitizeUrl(row.url);
@@ -309,9 +311,5 @@ voter.load();
 document.getElementById("producerform").onsubmit = (e)=>{
   e.preventDefault();
   voter.reg();
-  return false;
-};
-document.getElementById("angelfounder").onclick = (e)=>{
-  voter.angelfounder();
   return false;
 };

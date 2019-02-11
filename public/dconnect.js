@@ -1,3 +1,6 @@
+var $ = document.querySelector.bind(document);
+var $$ = document.querySelectorAll.bind(document);
+
 function httpRequest(method, url, done) {
   var xhr = new XMLHttpRequest();
   xhr.open(method, url);
@@ -56,11 +59,12 @@ function includeHTMLTags() {
       return;
     }
     file = elmnt.getAttribute("w3-load-html");
+    const target = elmnt.getAttribute("target");
     
     console.log(file);
     if (file) {
       /* Make an HTTP request using the attribute value as the file name: */
-      elmnt.onclick = ()=>{insertHTML(file, elmnt); return false;}
+      elmnt.onclick = ()=>{insertHTML(file, $(target)); return false;}
       elmnt.removeAttribute("w3-load-html");
       setTimeout(()=>{includeHTMLTags();}, 0);
       /* Exit the function: */
@@ -115,7 +119,7 @@ var runScriptTypes = [
   'text/x-javascript'
 ]
 // runs an array of async functions in sequential order
-function seq (arr, callback, index) {
+function seq (arr, callback=()=>{}, index) {
   // first call, without an index
   if (typeof index === 'undefined') {
     index = 0
@@ -131,7 +135,7 @@ function seq (arr, callback, index) {
   })
 }
 
-function runScripts ($container, scriptsDone) {
+function runScripts ($container) {
   // get scripts tags from a node
   var $scripts = $container.querySelectorAll('script')
   var runList = []
@@ -151,6 +155,6 @@ function runScripts ($container, scriptsDone) {
 
   // insert the script tags sequentially
   // to preserve execution order
-  seq(runList, scriptsDone)
+  seq(runList)
 }
 
