@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Welcome to dConnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/css/uikit.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit-icons.min.js"></script>
+    <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
+    <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eosjs@15.0.3/lib/eos.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="voting.js"></script>
+
+  </head>
+  <body>
+    <!--HEADER-->
+		<header id="header" style="background-color: #fff;" data-uk-sticky="show-on-up: true; animation: uk-animation-fade; media: @l">
+			<div class="uk-container">
+				<nav id="navbar" data-uk-navbar="mode: click;">
+					<div class="uk-navbar-left nav-overlay uk-visible@m">
+						<ul class="uk-navbar-nav">
+							<li>
+                  <a href="https://registration.dconnect.live" title="Sign Up">Sign Up</a>
+							</li>
+						</ul>
+					</div>
+					<div class="uk-navbar-center nav-overlay">
+						<a class="uk-navbar-item uk-logo" href="#" title="Logo"><img src="img/n-logo.png" alt="dConnect"></a>
+					</div>
+					<div class="uk-navbar-right nav-overlay">
+						<!--a class="uk-navbar-toggle uk-visible@m" data-uk-search-icon data-uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a-->
+						<div class="uk-navbar-item">
+							<a class="uk-visible@s" style="margin-right: 4px" href="https://www.facebook.com/dconnect.live" target="_blank" data-uk-icon="facebook"></a>
+							<a class="uk-visible@s" style="margin-right: 4px" href="https://twitter.com/@dconnectlive" target="_blank" data-uk-icon="twitter"></a>
+							<a class="uk-visible@s" style="margin-right: 4px" href="https://instagram.com/dconnect.live" target="_blank" data-uk-icon="instagram"></a>
+							<a class="uk-navbar-toggle uk-hidden@m" data-uk-toggle data-uk-navbar-toggle-icon target="_blank" href="#offcanvas-nav"></a>
+						</div>
+						
+					</div>
+					<div class="nav-overlay uk-navbar-left uk-flex-1" hidden>
+						<div class="uk-navbar-item uk-width-expand">
+							<form class="uk-search uk-search-navbar uk-width-1-1">
+								<input class="uk-search-input" type="search" placeholder="Search...">
+							</form>
+						</div>
+						<a class="uk-navbar-toggle" data-uk-close data-uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--/HEADER-->
+		<!-- NAVIGATION -->
+		<div class="uk-container">
+			<nav class="nav-scroll">
+				<ul class="uk-subnav uk-flex uk-flex-between uk-flex-nowrap">
+					<li><a href="https://steemit.com/blockchain/@dconnect/freedomfirst-a-blockchain-you-can-believe-in" target="_blank">Paper</a></li>
+					<li><a href="https://voter.dconnect.live" target="_blank">Block production</a></li>
+					<li><a href="#">Roadmap</a></li>
+					<li><a href="#">Social Media</a></li>
+					<li><a href="#">People</a></li>
+					<li><a href="#">Upload sites</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- /NAVIGATION -->
+		<div class="uk-container">
+      
+		<div class="mb-2">
+      <form id="producerform" style="display:none">
+        <p>
+        <button id="vote_button" class="btn btn-primary pl-5 pr-5" disabled="disabled">
+          You need scatter desktop to vote
+        </button>
+        </p>
+        <p>
+        <input id="producerkey" placeholder="register producer pubkey" cols="80"/>
+        <input type="submit"  class="btn btn-primary pl-5 pr-5">
+        </p>
+      </form>
+			<div class="form-group col-sm-3 float-right pr-0">
+				<input type="text" id="search" class="form-control" onkeyup="voter.search()" placeholder="Search..." />
+			</div>
+		</div>
+		<table class="table table-striped" id="bps">
+			<thead>
+				<tr>
+					<th scope="col">Select</th>
+					<th scope="col">Current Rank</th> 
+					<th scope="col">Owner</th>
+					<th scope="col">Total Votes</th>
+					<th scope="col">Percentage of Votes</th>
+				</tr>
+			</thead>
+			<tbody>
+
+
+			</tbody>
+		</table>
+    </div>
+		
+		
+		<!--FOOTER-->
+		<footer class="uk-section uk-section-small uk-section-muted">
+			<div class="uk-container">
+				<p class="uk-text-small uk-text-center">Copyright 2019 - Created by the Freedom First team | Home page built with <a href="http://getuikit.com" title="Visit UIkit 3 site" target="_blank" data-uk-tooltip><span data-uk-icon="uikit"></span></a></p>
+			</div>
+		</footer>
+		<!--/FOOTER-->
+		<!-- OFFCANVAS -->
+  </body>
+</html>
