@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ë~ã~<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Welcome to dConnect</title>
@@ -48,7 +49,7 @@
 		<div class="uk-container">
 			<nav class="nav-scroll">
 				<ul class="uk-subnav uk-flex uk-flex-between uk-flex-nowrap">
-					<li><a href="#/paper.html" w3-load-html="/bp.html" target="_blank">Paper</a></li>
+					<li><a href="https://steemit.com/blockchain/@dconnect/freedomfirst-a-blockchain-you-can-believe-in" target="_blank">Paper</a></li>
 					<li><a href="#/bp.html" w3-load-html="/bp.html" target="#content" >Block production</a></li>
 					<li><a href="#">Roadmap</a></li>
 					<li><a href="#">Social Media</a></li>
@@ -246,3 +247,4 @@
     </div>
   </body>
 </html>
+ã~
