@@ -25,7 +25,10 @@ function insertHTML(file, elmnt) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4) {
-      if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+      if (this.status == 200) {
+        elmnt.innerHTML = this.responseText;
+        runScripts(elmnt);
+      }
       if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
       /* Remove the attribute, and call this function once more: */
       elmnt.removeAttribute("w3-include-html");
@@ -41,24 +44,113 @@ function includeHTMLTags() {
   z = document.getElementsByTagName("*");
   for (i = 0; i < z.length; i++) {
     elmnt = z[i];
+    file = null;
     /*search for elements with a certain atrribute:*/
     file = elmnt.getAttribute("w3-include-html");
     if (file) {
       /* Make an HTTP request using the attribute value as the file name: */
       insertHTML(file, elmnt);
+      elmnt.removeAttribute("w3-include-html");
       setTimeout(()=>{includeHTMLTags();}, 0);
       /* Exit the function: */
       return;
     }
     file = elmnt.getAttribute("w3-load-html");
     
+    console.log(file);
     if (file) {
       /* Make an HTTP request using the attribute value as the file name: */
       elmnt.onclick = ()=>{insertHTML(file, elmnt); return false;}
+      elmnt.removeAttribute("w3-load-html");
       setTimeout(()=>{includeHTMLTags();}, 0);
       /* Exit the function: */
       return;
     }
   }
 }
+
+
 includeHTMLTags();
+
+function insertScript ($script, callback) {
+  var s = document.createElement('script')
+  s.type = 'text/javascript'
+  if ($script.src) {
+    s.onload = callback
+    s.onerror = callback
+    s.src = $script.src
+  } else {
+    s.textContent = $script.innerText
+  }
+
+  // re-insert the script tag so it executes.
+  document.head.appendChild(s)
+
+  // clean-up
+  $script.parentNode.removeChild($script)
+
+  // run the callback immediately for inline scripts
+  if (!$script.src) {
+    callback()
+  }
+}
+
+// https://html.spec.whatwg.org/multipage/scripting.html
+var runScriptTypes = [
+  'application/javascript',
+  'application/ecmascript',
+  'application/x-ecmascript',
+  'application/x-javascript',
+  'text/ecmascript',
+  'text/javascript',
+  'text/javascript1.0',
+  'text/javascript1.1',
+  'text/javascript1.2',
+  'text/javascript1.3',
+  'text/javascript1.4',
+  'text/javascript1.5',
+  'text/jscript',
+  'text/livescript',
+  'text/x-ecmascript',
+  'text/x-javascript'
+]
+// runs an array of async functions in sequential order
+function seq (arr, callback, index) {
+  // first call, without an index
+  if (typeof index === 'undefined') {
+    index = 0
+  }
+
+  arr[index](function () {
+    index++
+    if (index === arr.length) {
+      callback()
+    } else {
+      seq(arr, callback, index)
+    }
+  })
+}
+
+function runScripts ($container, scriptsDone) {
+  // get scripts tags from a node
+  var $scripts = $container.querySelectorAll('script')
+  var runList = []
+  var typeAttr
+
+  [].forEach.call($scripts, function ($script) {
+    typeAttr = $script.getAttribute('type')
+
+    // only run script tags without the type attribute
+    // or with a javascript mime attribute value
+    if (!typeAttr || runScriptTypes.indexOf(typeAttr) !== -1) {
+      runList.push(function (callback) {
+        insertScript($script, callback)
+      })
+    }
+  })
+
+  // insert the script tags sequentially
+  // to preserve execution order
+  seq(runList, scriptsDone)
+}
+
