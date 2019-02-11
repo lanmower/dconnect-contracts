@@ -1,3 +1,16 @@
 This will be a tutorial to show how we can edit 
-this website and instantly upload it to IPFS and 
-the FreedomFirst EOS based blockchain.
+this website with glitch, then by pressing space
+in the server.js file, evertything in "public/" 
+folder will be stored on IPFS and indexed with the
+FreedomFirst EOS based blockchain.
+
+The .env file stores the account name, private key, 
+and the name that will be used to generate a 
+subdomain on https://dconnect.live 
+
+
+We will edit the text "Sign Up" to "Sign Up Now!" 
+and show the log file of the server executing
+the tasks with IPFS as well as FreedomFirst.
+
+  Thanks for watching!
