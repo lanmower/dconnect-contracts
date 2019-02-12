@@ -13,6 +13,9 @@ window.config = {
 };
 
 window.eosPublic = new window.Eos(config);
-$('#search').onclick = async ()=>{
-  $('#search').innerHTML = JSON.stringify(await eosPublic.getAccount($('#search').value));
+$('#searchform').onsubmit = async ()=>{
+  console.log('test');
+  const search = $('#search').value;
+  console.log(search);
+  $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getAccount(search));
 };
