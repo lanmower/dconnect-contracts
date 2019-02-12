@@ -13,4 +13,6 @@ window.config = {
 };
 
 window.eosPublic = new window.Eos(config);
-$('#search').value
+$('#search').onclick = async ()=>{
+  $('#search').innerHTML = JSON.stringify(await eosPublic.getAccount($('#search').value));
+};
