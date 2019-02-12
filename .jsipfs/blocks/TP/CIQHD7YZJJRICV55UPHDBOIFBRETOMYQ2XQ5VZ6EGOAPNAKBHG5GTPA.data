@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+±t©t<!DOCTYPE html>
 <html lang="en">
   <head>   
     <title>Welcome to dConnect</title>
@@ -34,8 +35,6 @@
 							<a class="uk-visible@s" style="margin-right: 4px" href="https://www.facebook.com/dconnect.live" target="_blank" data-uk-icon="facebook"></a>
 							<a class="uk-visible@s" style="margin-right: 4px" href="https://twitter.com/@dconnectlive" target="_blank" data-uk-icon="twitter"></a>
 							<a class="uk-visible@s" style="margin-right: 4px" href="https://instagram.com/dconnect.live" target="_blank" data-uk-icon="instagram"></a>
-							<a class="uk-visible@s" style="margin-right: 4px" href="https://steemit.com/@dconnect" target="_blank"><img width="20" height="20" src="https://steemitimages.com/DQmVs4bowkrP3M3pejKrNoi6xYuUfzyyEu2qSfSUZpLNAUW/bw-steem-icon.png"/></a>
-              
 							<a class="uk-navbar-toggle uk-hidden@m" data-uk-toggle data-uk-navbar-toggle-icon target="_blank" href="#offcanvas-nav"></a>
 						</div>
 						
@@ -227,3 +226,4 @@
       </footer>
   </body>
 </html>
+©t
