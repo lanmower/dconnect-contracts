@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ôrìr<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Welcome to dConnect</title>
@@ -55,7 +56,6 @@
 			<nav class="nav-scroll">
 				<ul class="uk-subnav uk-flex uk-flex-between uk-flex-nowrap">
 					<li><a href="#/paper.html" w3-load-html="/paper.html" target="#content">Paper</a></li>
-					<li><a href="#/explorer.html" w3-load-html="/explorer.html" target="#content" >Explorer</a></li>
 					<li><a href="#/bp.html" w3-load-html="/bp.html" target="#content" >Block production</a></li>
 				</ul>
 			</nav>
@@ -224,3 +224,4 @@
       </footer>
   </body>
 </html>
+ìr

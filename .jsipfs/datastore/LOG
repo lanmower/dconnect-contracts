@@ -1,5 +1,5 @@
-2019/02/12-12:22:41.115778 7fcbd7fff700 Recovering log #246
-2019/02/12-12:22:41.115910 7fcbd7fff700 Level-0 table #248: started
-2019/02/12-12:22:41.118116 7fcbd7fff700 Level-0 table #248: 219 bytes OK
-2019/02/12-12:22:41.132977 7fcbd7fff700 Delete type=0 #246
-2019/02/12-12:22:41.133029 7fcbd7fff700 Delete type=3 #244
+2019/02/12-13:49:02.318012 7fbafbfff700 Recovering log #252
+2019/02/12-13:49:02.318156 7fbafbfff700 Level-0 table #255: started
+2019/02/12-13:49:02.323676 7fbafbfff700 Level-0 table #255: 1815 bytes OK
+2019/02/12-13:49:02.345160 7fbafbfff700 Delete type=0 #252
+2019/02/12-13:49:02.345218 7fbafbfff700 Delete type=3 #250
