@@ -13,6 +13,10 @@ window.config = {
 };
 
 window.eosPublic = new window.Eos(config);
+async function start(){
+  $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getInfo({}), null, 1);
+}
+start();
 $('#searchform').onsubmit = async ()=>{
   console.log('test');
   const search = $('#search').value;
