@@ -13,4 +13,4 @@ window.config = {
 };
 
 window.eosPublic = new window.Eos(config);
-console.log($('#search'));
+$('#search').value
