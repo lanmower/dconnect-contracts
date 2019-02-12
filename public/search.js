@@ -17,5 +17,5 @@ $('#searchform').onsubmit = async ()=>{
   console.log('test');
   const search = $('#search').value;
   console.log(search);
-  $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getAccount(search));
+  $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getAccount(search), null, 1);
 };
