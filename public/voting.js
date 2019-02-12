@@ -29,22 +29,11 @@ function sanitizeUrl(url) {
   return sanitizedUrl;
 }
 
-const networks = [
-     {
-         blockchain: 'eos',
-         protocol: 'https',
-         host: 'dconnect.live',
-         port: 443,
-         chainId: '342f1b4af05f4978a8f5d8e3e3e3761cb22dacf21a93e42abe0753bdacb6b621'
-     }
-
-];
 
 var defaultIndex = 0;
 if(this.location.protocol === "https:"){
   defaultIndex = 1;
 }
-//const network = networks[defaultIndex];
 const network = {
     blockchain: 'eos',
     protocol: 'https',
