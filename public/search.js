@@ -12,5 +12,5 @@ window.config = {
   httpEndpoint: "http" + (network.secured ? 's' : '') + '://'  + network.host + ':' + network.port
 };
 
-    window.eosPublic = new window.Eos(config);
+window.eosPublic = new window.Eos(config);
 console.log($('#search'));
