@@ -1,4 +1,5 @@
 
+ãÛ
 <div class="uk-flex uk-flex-center">
   <style>
     .uk-form-label {
@@ -19,3 +20,4 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/eosjs@15.0.3/lib/eos.min.js" crossorigin="anonymous"></script>
 <script src="./search.js" defer></script>
+Û
