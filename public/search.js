@@ -21,5 +21,9 @@ $('#searchform').onsubmit = async ()=>{
   console.log('test');
   const search = $('#search').value;
   console.log(search);
-  $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getAccount(search), null, 1);
+  if(!isNaN(search)) {
+    $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getBlock(search), null, 1);
+  } else {
+    $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getAccount(search), null, 1);
+  }
 };
