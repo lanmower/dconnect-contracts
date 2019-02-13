@@ -23,7 +23,6 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-
 function insertHTML(file, elmnt) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
