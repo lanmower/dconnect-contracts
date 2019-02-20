@@ -4,11 +4,7 @@
   "scripts": {
     "start": "node ./node_modules/freedomfirst/index.js && node server.js"
   },
-  "dependencies": { 
-    "express": "^4.16.4",
-    "freedomfirst": "1.1.9"
-  }, 
-  "engines": {
-    "node": "8.x"
+  "dependencies": {
+    "express": "^4.16.4"
   }
-} 
+}
