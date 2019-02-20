@@ -18,7 +18,6 @@ async function start(){
 }
 start();
 $('#searchform').onsubmit = async ()=>{
-  console.log('test');
   const search = $('#search').value;
   console.log(search);
   if(!isNaN(search)) {
