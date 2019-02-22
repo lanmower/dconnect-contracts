@@ -40,7 +40,12 @@ const network = {
     host: 'dconnect.live',
     port: 443,
     chainId: '342f1b4af05f4978a8f5d8e3e3e3761cb22dacf21a93e42abe0753bdacb6b621',
-    secured: true
+    secured: true,
+    token: {
+      contract: 'eosio.token',
+      symbol: 'FF',
+      decimals: '4',
+    }
 }
 
 var eosVoter = class {
@@ -244,23 +249,18 @@ this.eos.transaction({
 
   async load() {
     await this.verifyScatter();
-
-    return this.scatter.suggestNetwork({
+    const net = {
       blockchain: 'eos',
       host: network.host,
       port: network.scatterPort || network.port,
       chainId: network.chainId,
       httpEndpoint: "http://" + network.host + ':' + network.port,
       expireInSeconds: 120,
-    }).then((selectedNetwork) => {
+      token: JSON.stringify(network.token)
+    };
+    return this.scatter.suggestNetwork(net).then((selectedNetwork) => {
       const requiredFields = { accounts: [{ blockchain: 'eos', chainId: network.chainId }] };
-      this.eos = window.eo = this.scatter.eos({
-      blockchain: 'eos',
-      host: network.host,
-      port:  network.port,
-      chainId: network.chainId,
-      expireInSeconds: 120,
-    }, Eos, {chainId:network.chainId}, network.secured ? 'https' : undefined);
+      this.eos = window.eo = this.scatter.eos(net, Eos, {chainId:network.chainId}, network.secured ? 'https' : undefined);
       return scatter.getIdentity(requiredFields).then(identity => {
         if (identity.accounts.length === 0) return
         var accountName = identity.accounts[0].name;
