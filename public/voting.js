@@ -251,12 +251,13 @@ this.eos.transaction({
     await this.verifyScatter();
     const net = {
       blockchain: 'eos',
+      name: 'freedom first',
       host: network.host,
       port: network.scatterPort || network.port,
       chainId: network.chainId,
       httpEndpoint: "http://" + network.host + ':' + network.port,
       expireInSeconds: 120,
-      token: JSON.stringify(network.token)
+      token: network.token
     };
     return this.scatter.suggestNetwork(net).then((selectedNetwork) => {
       const requiredFields = { accounts: [{ blockchain: 'eos', chainId: network.chainId }] };
