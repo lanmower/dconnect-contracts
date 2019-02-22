@@ -2,10 +2,10 @@
   "name": "uploadme",
   "main": "server.js",
   "scripts": {
-    "start": "node ./node_modules/freedomfirst/index.js && node server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.16.4",
-    "freedomfirst": "latest"
+    "freedomfirst": "^1.1.10"
   }
 }
