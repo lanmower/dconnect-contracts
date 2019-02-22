@@ -42,9 +42,9 @@ const network = {
     chainId: '342f1b4af05f4978a8f5d8e3e3e3761cb22dacf21a93e42abe0753bdacb6b621',
     secured: true,
     token: {
-      contract: 'eosio.token',
-      symbol: 'FF',
-      decimals: '4',
+          decimals: '4',
+          symbol:'FF',
+          contract:'eosio.token'
     }
 }
 
@@ -247,7 +247,11 @@ this.eos.transaction({
     return Math.round(num * 10000) / 100 + "%";
   }
 
-  async load() {
+   async suggestNetwork()  {
+	    await (res => console.log(res));
+    }
+
+    async load() {
     await this.verifyScatter();
     
     const net = {
@@ -259,12 +263,11 @@ this.eos.transaction({
       chainId: network.chainId,
       httpEndpoint: "http://" + network.host + ':' + network.port,
       expireInSeconds: 120,
-      token:{
-          symbol:'FF',
-          contract:'eosio.token'
-      }
+      token:network.token
     };
-    return this.scatter.suggestNetwork(net).then((selectedNetwork) => {
+
+    
+    return this.scatter.suggestNetwork(ScatterJS.Network.fromJson(net)).then((selectedNetwork) => {
       const requiredFields = { accounts: [{ blockchain: 'eos', chainId: network.chainId }] };
       this.eos = window.eo = this.scatter.eos(net, Eos, {chainId:network.chainId}, network.secured ? 'https' : undefined);
       return scatter.getIdentity(requiredFields).then(identity => {
