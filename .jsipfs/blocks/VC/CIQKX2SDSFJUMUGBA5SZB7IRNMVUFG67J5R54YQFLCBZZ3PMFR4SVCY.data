@@ -1,4 +1,5 @@
-/* eslint-disable */
+
+‡GÿF/* eslint-disable */
 var invalidPrototcolRegex = /^(%20|\s)*(javascript|data)/im;
 var ctrlCharactersRegex = /[^\x20-\x7E]/gmi;
 var urlSchemeRegex = /^([^:]+):/gm;
@@ -42,9 +43,9 @@ const network = {
     chainId: '342f1b4af05f4978a8f5d8e3e3e3761cb22dacf21a93e42abe0753bdacb6b621',
     secured: true,
     token: {
-      contract: 'eosio.token',
-      symbol: 'FF',
-      decimals: '4',
+          decimals: '4',
+          symbol:'FF',
+          contract:'eosio.token'
     }
 }
 
@@ -255,19 +256,21 @@ this.eos.transaction({
     await this.verifyScatter();
     
     const net = {
-        blockchain: network.blockchain,
-        protocol: network.protocol,
-        host: network.host,
-        port: network.port,
-        chainId: network.chainId,
-        secured: network.secured,
-        token: network.token
-	    };
+      blockchain: 'eos',
+      protocol:'https',
+      name: 'freedom first',
+      host: network.host,
+      port: network.scatterPort || network.port,
+      chainId: network.chainId,
+      httpEndpoint: "http://" + network.host + ':' + network.port,
+      expireInSeconds: 120,
+      token:network.token
+    };
 
     
     return this.scatter.suggestNetwork(ScatterJS.Network.fromJson(net)).then((selectedNetwork) => {
-      const requiredFields = { accounts: [{ blockchain: 'eos', chainId: net.chainId }] };
-      this.eos = window.eo = this.scatter.eos(net, Eos, {chainId:net.chainId}, net.secured ? 'https' : undefined);
+      const requiredFields = { accounts: [{ blockchain: 'eos', chainId: network.chainId }] };
+      this.eos = window.eo = this.scatter.eos(net, Eos, {chainId:network.chainId}, network.secured ? 'https' : undefined);
       return scatter.getIdentity(requiredFields).then(identity => {
         if (identity.accounts.length === 0) return
         var accountName = identity.accounts[0].name;
@@ -307,3 +310,4 @@ document.getElementById("producerform").onsubmit = (e)=>{
   voter.reg();
   return false;
 };
+ÿF
