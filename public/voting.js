@@ -64,29 +64,7 @@ var eosVoter = class {
     this.working = true;
     this.eos.regproducer(this.name, document.getElementById("producerkey").value, "www.google.com", 10)
   }
-  angelfounder(errorHandler, successHandler) {    
-    this.verifyScatter();
-    this.working = true;
-this.eos.transaction({
-                 actions: [{
-                     account: 'eosio.msig',
-                     name: 'approve',
-                     authorization: [{
-                         actor: this.name,
-                         permission: 'active',
-                     }],
-                     data: {
-                         proposer: this.name,
-                         proposal_name:"angelfounder",
-						             level:"active"
-                     },
-                 }]
-             }, {
-                 blocksBehind: 3,
-                 expireSeconds: 30
-             });
-  }
-
+  
   vote(errorHandler, successHandler) {    
     document.getElementById("vote_button").disabled = true;
     this.verifyScatter();
