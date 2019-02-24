@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "freedomfirst": "^1.3.10"
+    "freedomfirst": "^1.3.20"
   }
 }
