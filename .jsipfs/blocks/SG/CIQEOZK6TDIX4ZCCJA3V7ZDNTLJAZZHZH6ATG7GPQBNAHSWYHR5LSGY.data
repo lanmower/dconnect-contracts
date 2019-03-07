@@ -1,4 +1,5 @@
-<script type="text/javascript" src="dconnect.js"></script>
+
+¼´<script type="text/javascript" src="dconnect.js"></script>
   
 <div>
 PRIVATE KEY<br/>
@@ -43,4 +44,4 @@ PASSWORD<br/>
       const change = function() {
         makecode();
       }
-</script>
+</script>´
