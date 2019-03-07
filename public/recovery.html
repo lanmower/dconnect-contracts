@@ -1,21 +1,31 @@
 <script type="text/javascript" src="dconnect.js"></script>
-  
-<div>
-PRIVATE KEY<br/>
-<input type="text" onkeydown="change()" onchange="change()" id="text"/>
-</div>
-<div>
-PASSWORD<br/>
-<input type="password" onkeydown="change()" onchange="change()" id="password"/>
-</div>
-<div id="qrcode" download style="max-width:340px; width:100%; display: inline-block;"></div>
-<div>
-<pre id="code"></pre>
-<div>
-<div>
-<button id="encrypt">save</button>
-<button id="decrypt">load</button>
-</div>
+
+<div class="uk-flex uk-flex-center">
+  <style>
+    .uk-form-label {
+      color:#fff
+    }
+  </style>
+   <article class="uk-section uk-section-small uk-padding-remove-top uk-container">
+    <div class="uk-margin">
+      <div>
+        PRIVATE KEY<br/>
+        <input type="text" onkeydown="change()" onchange="change()" id="text"/>
+      </div>
+      <div>
+        PASSWORD<br/>
+        <input type="password" onkeydown="change()" onchange="change()" id="password"/>
+      </div>
+      <div id="qrcode" download style="max-width:340px; width:100%; display: inline-block;"></div>
+      <div>
+        <pre id="code"></pre>
+        <div>
+          <button id="encrypt">save</button>
+          <button id="decrypt">load</button>
+        </div>
+     </div>
+   </div>
+  </article>
 </div>
 
 <script src="qrcode.js"></script>
