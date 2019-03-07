@@ -1,9 +1,27 @@
-<div id="qrcode" download style="max-width:340px; margin-top:15px; width:100%; display: inline-block;"></div>
+PRIVATE KEY<input type="text" onchange="change()" id="text"/>
+PASSWORD<input type="password" onchange="change()" id="password"/>
+<div id="qrcode" download style="max-width:340px; width:100%; display: inline-block;"></div>
+<button id="encrypt">save</button>
+<button id="decrypt">load</button>
+
 <script src="qrcode.js"></script>
 <script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js"></script>
-<script>
-  var qrcode = new QRCode(document.getElementById("qrcode"), {
-    width : 325,
-    height : 325
-  });
+    <div id="output">
+    </div>
+    <script>
+      document.getElementById("encrypt").onclick= ()=>{
+        let output = 0;
+        output = sjcl.encrypt(document.getElementById("password").value, document.getElementById('text').value, {iter:250000}); 
+      }
+      document.getElementById("decrypt").onclick= ()=>{
+        const time = new Date().getTime();
+        document.getElementById("output").textContent = sjcl.decrypt(document.getElementById("password").value, document.getElementById('text').value)
+      }
+      var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width : 325,
+        height : 325
+      });
+      change = ()=>{
+        qrcode.makeCode(sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:2500}))
+      }
 </script>
