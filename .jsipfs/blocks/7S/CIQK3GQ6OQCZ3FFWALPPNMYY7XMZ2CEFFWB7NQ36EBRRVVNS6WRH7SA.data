@@ -1,4 +1,5 @@
-<script type="text/javascript" src="dconnect.js"></script>
+
+áÙ<script type="text/javascript" src="dconnect.js"></script>
 
 <div class="uk-flex uk-flex-center">
   <style>
@@ -56,4 +57,4 @@
       change = function() {
         makecode();
       }
-</script>
+</script>Ù
