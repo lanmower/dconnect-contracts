@@ -38,8 +38,10 @@
         output = sjcl.encrypt(document.getElementById("password").value, document.getElementById('text').value, {iter:250000}); 
       }
       document.getElementById("decrypt").onclick= ()=>{
-        const time = new Date().getTime();
-        document.getElementById("output").textContent = sjcl.decrypt(document.getElementById("password").value, document.getElementById('text').value)
+        const password = document.getElementById("password").value;
+        const text = document.getElementById("text").value;
+        console.log(password, text);
+        document.getElementById("code").textContent = sjcl.decrypt(password, text);
       }
       qrcode = new QRCode(document.getElementById("qrcode"), {
         width : 325,
