@@ -26,3 +26,4 @@ $('#searchform').onsubmit = async ()=>{
     $('#searchoutput').innerHTML = JSON.stringify(await eosPublic.getAccount(search), null, 1);
   }
 };
+$('#search').style.display = "block";
