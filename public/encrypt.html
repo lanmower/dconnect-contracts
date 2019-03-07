@@ -1,8 +1,13 @@
-PRIVATE KEY<input type="text" onchange="change()" id="text"/>
-PASSWORD<input type="password" onchange="change()" id="password"/>
+<script type="text/javascript" src="dconnect.js"></script>
+<div>
+PRIVATE KEY<input type="text" onkeydown="change()" onchange="change()" id="text"/>
+PASSWORD<input type="password" onkeydown="change()" onchange="change()" id="password"/>
+</div>
 <div id="qrcode" download style="max-width:340px; width:100%; display: inline-block;"></div>
+<div>
 <button id="encrypt">save</button>
 <button id="decrypt">load</button>
+</div>
 
 <script src="qrcode.js"></script>
 <script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js"></script>
@@ -21,7 +26,10 @@ PASSWORD<input type="password" onchange="change()" id="password"/>
         width : 325,
         height : 325
       });
-      change = ()=>{
-        qrcode.makeCode(sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:2500}))
+      const makecode = debounce(function() {
+        qrcode.makeCode(sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:100000}))
+      }, 250);
+      const change = function() {
+        makecode();
       }
 </script>
