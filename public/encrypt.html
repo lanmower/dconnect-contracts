@@ -1,3 +1,9 @@
-
-<script src="qrcode.js" defer></script>
-<script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js" defer></script>
+<div id="qrcode" download style="max-width:340px; margin-top:15px; width:100%; display: inline-block;"></div>
+<script src="qrcode.js"></script>
+<script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js"></script>
+<script>
+  var qrcode = new QRCode(document.getElementById("qrcode"), {
+    width : 325,
+    height : 325
+  });
+</script>
