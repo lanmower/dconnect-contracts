@@ -1,4 +1,5 @@
-var $ = document.querySelector.bind(document);
+
+ƒ&û%var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);
 
 function httpRequest(method, url, done) {
@@ -169,3 +170,4 @@ function runScripts ($container) {
   seq(runList)
 }
 
+û%

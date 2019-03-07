@@ -1,14 +1,15 @@
-var $ = document.querySelector.bind(document);
+
+„&ü%var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);
 
 function httpRequest(method, url, done) {
   var xhr = new XMLHttpRequest();
-  xhr.open(method, url);
   xhr.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
   xhr.setRequestHeader('cache-control', 'max-age=0');
   xhr.setRequestHeader('expires', '0');
   xhr.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
   xhr.setRequestHeader('pragma', 'no-cache');
+  xhr.open(method, url);
   xhr.onload = function () {
     done(null, xhr.response);
   };
@@ -30,6 +31,12 @@ function getParameterByName(name, url) {
 
 function insertHTML(file, elmnt) {
   var xhttp = new XMLHttpRequest();
+  xhttp.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
+  xhttp.setRequestHeader('cache-control', 'max-age=0');
+  xhttp.setRequestHeader('expires', '0');
+  xhttp.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
+  xhttp.setRequestHeader('pragma', 'no-cache');
+
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4) {
       if (this.status == 200) {
@@ -42,11 +49,6 @@ function insertHTML(file, elmnt) {
     }
   }
   xhttp.open("GET", file, true);
-  xhttp.setRequestHeader('cache-control', 'no-cache, must-revalidate, post-check=0, pre-check=0');
-  xhttp.setRequestHeader('cache-control', 'max-age=0');
-  xhttp.setRequestHeader('expires', '0');
-  xhttp.setRequestHeader('expires', 'Tue, 01 Jan 1980 1:00:00 GMT');
-  xhttp.setRequestHeader('pragma', 'no-cache');
   xhttp.send();
 }
 
@@ -169,3 +171,4 @@ function runScripts ($container) {
   seq(runList)
 }
 
+ü%
