@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+†wþv<!DOCTYPE html>
 <html lang="en">
   <head>   
     <title>Welcome to dConnect</title>
@@ -24,11 +25,11 @@
 							</li>
 						</ul>
 					</div>
-					<div class="uk-navbar-center nav-overlay"> 
+					<div class="uk-navbar-center nav-overlay" style="margin-top: 40px"> 
 						<a class="uk-navbar-item uk-logo" href="#" title="Logo">
-              <img src="https://cdn.glitch.com/43ce6b0b-5212-45a8-9dba-0edfb59eebe5%2FDCONNECT-LOGO-2.png?1549905917345" width="64px" height="64px" alt="dConnect" />
+              <img src="https://cdn.glitch.com/43ce6b0b-5212-45a8-9dba-0edfb59eebe5%2FDCONNECT-LOGO-2.png?1549905917345" width="120px" height="120px" alt="dConnect" />
             </a>
-					</div>  
+					</div>  <br/><br/>
 					<div class="uk-navbar-right nav-overlay">
 						<!--a class="uk-navbar-toggle uk-visible@m" data-uk-search-icon data-uk-toggle="target: .nav-overlay; animation: uk-animation-fade" href="#"></a-->
 						<div class="uk-navbar-item">
@@ -57,11 +58,10 @@
 		<div class="uk-container">
 			<nav class="nav-scroll">
 				<ul class="uk-subnav uk-flex uk-flex-between uk-flex-nowrap">
-					<li><a href="#/bp.html" w3-load-html="/bp.html" target="#content" >Voting</a></li>
 					<li><a href="#/paper.html" w3-load-html="/paper.html" target="#content">Paper</a></li>
-					<li><a href="#/links.html" w3-load-html="/links.html" target="#content" >Links</a></li>
-					<li><a href="#/recovery.html" w3-load-html="/recovery.html" target="#content" >Save</a></li>
 					<li><a href="#/explorer.html" w3-load-html="/explorer.html" target="#content" >Explorer</a></li>
+					<li><a href="#/links.html" w3-load-html="/links.html" target="#content" >Links</a></li>
+					<li><a href="#/bp.html" w3-load-html="/bp.html" target="#content" >Block production</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -229,3 +229,4 @@
       </footer>
   </body>
 </html>
+þv
