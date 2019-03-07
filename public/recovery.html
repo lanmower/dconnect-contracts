@@ -41,16 +41,16 @@
         const time = new Date().getTime();
         document.getElementById("output").textContent = sjcl.decrypt(document.getElementById("password").value, document.getElementById('text').value)
       }
-      var qrcode = new QRCode(document.getElementById("qrcode"), {
+      qrcode = new QRCode(document.getElementById("qrcode"), {
         width : 325,
         height : 325
       });
-      const makecode = debounce(function() {
+      makecode = debounce(function() {
         const code = sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:100000});
         qrcode.makeCode(code);
         document.getElementById('code').textContent = code;
       }, 250);
-      const change = function() {
+      change = function() {
         makecode();
       }
 </script>
