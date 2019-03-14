@@ -1,5 +1,3 @@
-if(!dconnect) dconnect = {};
-if(!dconnect.init) dconnect.init = {};
 dconnect.init.random = (function() {
   this.Random = function Random(seed) {
      this._seed = seed % 2147483647;

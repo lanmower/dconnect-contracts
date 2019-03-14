@@ -1,6 +1,6 @@
 var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);
-
+id(!window.dconnect = {};
 function debounce(func, wait, immediate) {
   var timeout;
   return function executedFunction() {

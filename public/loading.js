@@ -40,7 +40,7 @@ dconnect.init.loading = (function() {
      if (resp.rows.length && resp.rows[0].key == key) return resp.rows[0];
   }
 
-  const swarm = ['/dns4/dconnect.live/tcp/4005/wss/ipfs/QmVaQgohmu7PyQNGJ74KgtvatwkWfz4LfJ4rtWAo6ph5fT', '/dns4/gostomp.co.za/tcp/4005/wss/ipfs/QmbRAcsHYWefgUMzcKPiKmCJf5PgyoXnT32pPvRFDF9che'];
+  /*const swarm = ['/dns4/dconnect.live/tcp/4005/wss/ipfs/QmVaQgohmu7PyQNGJ74KgtvatwkWfz4LfJ4rtWAo6ph5fT', '/dns4/gostomp.co.za/tcp/4005/wss/ipfs/QmbRAcsHYWefgUMzcKPiKmCJf5PgyoXnT32pPvRFDF9che'];
 
   this.ipfs = new Ipfs({
     init:true,
@@ -71,5 +71,5 @@ dconnect.init.loading = (function() {
     }
     
   })
-}).bind(window.dconnect);
+}).bind(window.dconnect);*/
 dconnect.init.loading();
