@@ -1,4 +1,9 @@
+<script src="https://cdn.jsdelivr.net/npm/eosjs@15.0.3/lib/eos.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
+<script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
 <script type="text/javascript" src="dconnect.js"></script>
+<script type="text/javascript" src="saving.js"></script>
+<script type="text/javascript" src="loading.js"></script>
 
 <div class="uk-flex uk-flex-center">
   <style>
@@ -20,7 +25,9 @@
       <div>
         <pre id="code"></pre>
         <div>
-          <button id="encrypt" onclick="save()">save</button>
+            await dconnect.save(path, JSON.stringify({title:$('#title').value, category:path, hash:data.hash}));
+
+          <button id="encrypt" onclick="dconnect.save(getCode(), );">save</button>
         </div>
      </div>
    </div>
@@ -58,7 +65,6 @@
       change = function() {
         makecode();
       }
-      function save = function() {
-      }
+
       document.getElementById("text")
 </script>
