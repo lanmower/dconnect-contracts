@@ -20,8 +20,7 @@
       <div>
         <pre id="code"></pre>
         <div>
-          <button id="encrypt">save</button>
-          <button id="decrypt">load</button>
+          <button id="encrypt" onclick="save()">save</button>
         </div>
      </div>
    </div>
@@ -38,22 +37,28 @@
         output = sjcl.encrypt(document.getElementById("password").value, document.getElementById('text').value, {iter:250000}); 
         console.log(output);
       }
-      document.getElementById("decrypt").onclick= ()=>{
+      /*document.getElementById("decrypt").onclick= ()=>{
         const password = document.getElementById("password").value;
         const text = document.getElementById("text").value;
         console.log(password, text);
         document.getElementById("code").textContent = sjcl.decrypt(password, text);
-      }
+      }*/
       /*qrcode = new QRCode(document.getElementById("qrcode"), {
         width : 325,
         height : 325
       });*/
-      makecode = debounce(function() {
-        const code = sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:100000});
-        qrcode.makeCode(code);
+      function getCode() {
+        return sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:100000});
+      }
+      makecode = debounce(()=>{
+        const code = getCode();
         document.getElementById('code').textContent = code;
-      }, 250);
+        //qrcode.makeCode(code);
+      } , 250);
       change = function() {
         makecode();
       }
+      function save = function() {
+      }
+      document.getElementById("text")
 </script>
