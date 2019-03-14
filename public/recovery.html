@@ -44,10 +44,10 @@
         console.log(password, text);
         document.getElementById("code").textContent = sjcl.decrypt(password, text);
       }
-      qrcode = new QRCode(document.getElementById("qrcode"), {
+      /*qrcode = new QRCode(document.getElementById("qrcode"), {
         width : 325,
         height : 325
-      });
+      });*/
       makecode = debounce(function() {
         const code = sjcl.encrypt(document.getElementById("text").value,document.getElementById("password").value, {iter:100000});
         qrcode.makeCode(code);
