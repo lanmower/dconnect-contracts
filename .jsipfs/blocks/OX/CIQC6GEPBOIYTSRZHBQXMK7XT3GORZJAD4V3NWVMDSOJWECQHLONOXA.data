@@ -1,4 +1,5 @@
-if(!dconnect) var dconnect = {};
+
+©¡if(!dconnect) var dconnect = {};
 if(!dconnect.init) dconnect.init = {};
 dconnect.init.loading = (function() {
   this.eos = new Eos({
@@ -73,4 +74,4 @@ dconnect.init.loading = (function() {
   })
 }).bind(window.dconnect);*/
 dconnect.init.loading();
-});
+});¡
