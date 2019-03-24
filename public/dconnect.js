@@ -61,7 +61,7 @@ dconnect.init.utils = (function () {
       if (this.readyState == 4) {
         if (this.status == 200) {
           elmnt.innerHTML = this.responseText;
-          runScripts(elmnt);
+          dconnect.runScripts(elmnt);
         }
         if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
         /* Remove the attribute, and call this function once more: */
@@ -158,7 +158,7 @@ dconnect.init.utils = (function () {
       if (index === arr.length) {
         callback()
       } else {
-        seq(arr, callback, index)
+        dconnect.seq(arr, callback, index)
       }
     })
   }
@@ -176,14 +176,14 @@ dconnect.init.utils = (function () {
       // or with a javascript mime attribute value
       if (!typeAttr || runScriptTypes.indexOf(typeAttr) !== -1) {
         runList.push(function (callback) {
-          insertScript($script, callback)
+          dconnect.insertScript($script, callback)
         })
       }
     })
 
     // insert the script tags sequentially
     // to preserve execution order
-    seq(runList)
+    dconnect.seq(runList)
   }
 
   this.toggle = function toggle(el) {
@@ -194,5 +194,7 @@ dconnect.init.utils = (function () {
     var matches = str.match(/[\w\d\’\'-]+/gi);
     return matches ? matches.length : 0;
   }
+  this.includeHTMLTags();
+
 }).bind(window.dconnect);
 dconnect.init.utils();
