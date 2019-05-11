@@ -15,6 +15,7 @@ dconnect.init.saving = (function() {
   }
 
   ScatterJS.plugins(new ScatterEOS());
+  
   const network = dconnect.network =  {
          blockchain: 'eos',
          protocol: 'https',
