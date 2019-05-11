@@ -51,15 +51,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       .pipe(res.type('json'))
   })
   
-  function pollStream(cursor) {
-    while (!cursor.isExhausted()) {
-      if (cursor.hasNext()) {
-        const change = cursor.next();
-        console.log(JSON.stringify(change));
-      }
-    }
-    pollStream(cursor);
-  }
+  changeStreamCursor.on('change', next => {
+    console.log(next);  
+  });
   let updateOps = {
     $match: {
       $and: [
