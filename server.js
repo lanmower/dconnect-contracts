@@ -10,27 +10,30 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   let dbo = db.db("dconnectlive");
   let collection = await dbo.collection("transactions");
   
-  let updateOps = {
-    $match: {
-      $and: [
-        { operationType: "insert" }
-      ]
+const changeStreamCursor = collection.watch();
+resumeStream(changeStreamCursor, true);
+
+function resumeStream(changeStreamCursor, forceResume = false) {
+  let resumeToken;
+  while (!changeStreamCursor.isExhausted()) {
+    if (changeStreamCursor.hasNext()) {
+      change = changeStreamCursor.next();
+      print(JSON.stringify(change));
+      resumeToken = change._id;
+      if (forceResume === true) {
+        print("\r\nSimulating app failure for 10 seconds...");
+        sleepFor(10000);
+        changeStreamCursor.close();
+        const newChangeStreamCursor = collection.watch([], {
+          resumeAfter: resumeToken
+        });
+        print("\r\nResuming change stream with token " + JSON.stringify(resumeToken) + "\r\n");
+        resumeStream(newChangeStreamCursor);
+      }
     }
-  };
-
-  const changeStreamCursor = collection.watch([updateOps]);
-
-
-  pollStream(changeStreamCursor);
-  //this function polls a change stream and prints out each change as it comes in
-  function pollStream(cursor) {
-    while (cursor.hasNext()) {
-        const change = cursor.next();
-        print(JSON.stringify(change));
-    }
-    pollStream(cursor);
   }
-
+}
+  resumeStream(changeStreamCursor, forceResume);
   const listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
   }); 
