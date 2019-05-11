@@ -32,7 +32,7 @@ ScatterJS.scatter.connect('My-App').then(connected => {
         const eosOptions = { expireInSeconds:60 };
 
         // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
-        const eos = scatter.eos(network, Eos, eosOptions);
+        window.eos = scatter.eos(network, Eos, eosOptions);
 
         // ----------------------------
         // Now that we have an identity,
@@ -43,32 +43,27 @@ ScatterJS.scatter.connect('My-App').then(connected => {
 
         // Never assume the account's permission/authority. Always take it from the returned account.
         const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
-/*       await eos.transaction({
+/*
+eos.transaction({
          actions: [{
            account: 'dconnectlive',
-           name: type,
+           name: 'set',
            authorization: [{
-             actor: actor.name,
+             actor: account.name,
              permission: 'active',
            }],
            data: {
-             app: this.getHash('dconnect-blog'),
-             account: actor.name,
-             key: this.getHash(key),
-             value:value
+             app: 'anytext',
+             account: account.name,
+             key: 'anytext',
+             value:'value'
            },
          }]
        }, {
          blocksBehind: 9,
          expireSeconds: 180
-       });*/
-
-        /*eos.transfer(account.name, 'dconnectlive', '1.0000 EOS', 'memo', transactionOptions).then(trx => {
-            // That's it!
-            console.log(`Transaction ID: ${trx.transaction_id}`);
-        }).catch(error => {
-            console.error(error);
-        });*/
+       });
+*/
 
     }).catch(error => {
         // The user rejected this request, or doesn't have the appropriate requirements.
