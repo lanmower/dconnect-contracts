@@ -32,7 +32,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     smartcontracts.executeSmartContract({
       id:next.transactionId,
       sender:next.authorization[0].actor,
-      contract:"api.emit('test', 'test')",
+      contract:"",
       action:'cuck',
       payload:{test:true}
     }).fullDocument;

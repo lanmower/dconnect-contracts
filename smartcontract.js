@@ -78,6 +78,7 @@ class SmartContracts {
           sandbox: {
             ...vmState,
             done: (error) => {
+              console.log(error);
               resolve(error);
             },
           },
@@ -85,6 +86,7 @@ class SmartContracts {
 
         vm.run(contractCode);
       } catch (err) {
+        console.log(err);
         resolve(err);
       }
     });
