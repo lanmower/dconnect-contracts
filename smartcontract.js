@@ -7,7 +7,6 @@ class SmartContracts {
   static async executeSmartContract(
     transaction, timestamp, jsVMTimeout,
   ) {
-  console.log(transaction);
     try {
       const {
         id,
@@ -48,7 +47,7 @@ class SmartContracts {
           },
         },
       };
-      console.log();
+      console.log(contract);
       const error = await SmartContracts.runContractCode(vmState, contract, jsVMTimeout);
 
       if (error) {
@@ -64,7 +63,7 @@ class SmartContracts {
       return results;
     } catch (e) {
       // console.error('ERROR DURING CONTRACT EXECUTION: ', e);
-      // console.log('error', error);
+       console.log('error', e);
       return { logs: { errors: [`${e.name}: ${e.message}`] } };
     }
   }
