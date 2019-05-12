@@ -49,7 +49,7 @@ class SmartContracts {
         },
       };
 
-      const error = await SmartContracts.runContractCode(vmState, contractCode, jsVMTimeout);
+      const error = await SmartContracts.runContractCode(vmState, contract, jsVMTimeout);
 
       if (error) {
         const { name, message } = error;

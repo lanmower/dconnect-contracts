@@ -6,7 +6,8 @@ const app = express();
 app.use(express.static('public'));
 const server = http.createServer(app);
 var MongoClient = require('mongodb').MongoClient;
-const smartconracts = require('./smartcontract.js')
+const  smartcontracts = require('./smartcontract.js').SmartContracts;
+console.log(smartcontracts);
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   let dbo = db.db("dconnectlive");
   let collection = await dbo.collection("transactions");
@@ -15,9 +16,20 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   app.get('/transactions', (req, res) => {
     collection.find().sort({_id:-1})
       .pipe(require('JSONStream').stringify())
-      .pipe(res.type('json'))
+      .pipe(res.type('json'));
+    
   })
   
+  collection.find().sort({_id:-1}).forEach((item)=>{
+    smartcontracts.executeSmartContract({
+      id:item.transactionId,
+      sender:item.authorization[0].actor,
+      contract:"console.log('test')",
+      action:'cuck',
+      payload:{test:true},
+    });
+    console.log(item);
+  });
   changeStreamCursor.on('change', next => {
     console.log(next);  
   });
