@@ -23,7 +23,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,
-      contract:"console.log('test')",
+      contract:"api.emit('test', 'test')",
       action:'cuck',
       payload:{test:true}
     });
@@ -32,7 +32,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     smartcontracts.executeSmartContract({
       id:next.transactionId,
       sender:next.authorization[0].actor,
-      contract:"",
+      contract:"api.emit('test', 'test')",
       action:'cuck',
       payload:{test:true}
     }).fullDocument;
