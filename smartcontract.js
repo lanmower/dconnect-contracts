@@ -47,7 +47,6 @@ class SmartContracts {
         },
       };
       const error = await SmartContracts.runContractCode(vmState, contract, jsVMTimeout);
-      console.log('finished');
       if (error) {
         console.log(error);
         const { name, message } = error;
@@ -83,8 +82,7 @@ class SmartContracts {
             },
           },
         });
-        console.log(contractCode, jsVMTimeout);
-        vm.run(contractCode);
+        vm.run("function(who) { console.log('hello '+ who); }");
       } catch (err) {
         console.log(err);
         resolve(err);
