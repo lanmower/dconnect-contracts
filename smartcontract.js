@@ -1,3 +1,4 @@
+var MongoClient = require('mongodb').MongoClient;
 const { VM, VMScript } = require('vm2');
 const seedrandom = require('seedrandom');
 
@@ -27,29 +28,20 @@ class SmartContracts {
 
             // prepare the db object that will be available in the VM
       const db = {
-        // perform a query find on a table of the smart contract
-        find: (table, query, limit = 1000, offset = 0, indexes = []) => SmartContracts.find(
-          ipc, contract, table, query, limit, offset, indexes,
-        ),
-        // perform a query find on a table of an other smart contract
-        findInTable: (contractName, table, query, limit = 1000, offset = 0, index = '', descending = false) => SmartContracts.find(
-          ipc, contractName, table, query, limit, offset, index, descending,
-        ),
-        // perform a query findOne on a table of the smart contract
-        findOne: (table, query) => SmartContracts.findOne(ipc, contract, table, query),
-        // perform a query findOne on a table of an other smart contract
-        findOneInTable: (contractName, table, query) => SmartContracts.findOne(
-          ipc, contractName, table, query,
-        ),
-        // find the information of a contract
-        findContract: contractName => SmartContracts.findContract(ipc, contractName),
-        
-        insert: (table, record) => typeof event === 'string' && results.db.events.push({ name:'insert', table,record }),
-        remove: (table, record) => typeof event === 'string' && results.db.events.push({ name:'insert', table,record }),
-        // insert a record in the table of the smart contract
-        remove: (table, record) => SmartContracts.remove(ipc, contract, table, record),
-        // insert a record in the table of the smart contract
-        update: (table, record) => SmartContracts.update(ipc, contract, table, record),
+        find: (table, query) => ()=>{
+        },
+        findInContract: (contractName, table, query) =>{
+        },
+        findOne: (table, query) => {
+        },
+        findOneInContract: (contractName, table, query) =>{
+        },
+        insert: (table, record) => ()=>{
+        },
+        remove: (table, record) => ()=>{
+        },
+        update: (table, record) => ()=>{
+        },
       };
 
       // initialize the state that will be available in the VM
