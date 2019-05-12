@@ -1,12 +1,11 @@
 var MongoClient = require('mongodb').MongoClient;
 const { VM, VMScript } = require('vm2');
 const seedrandom = require('seedrandom');
-
 const contracts = {};
 class SmartContracts {
   // execute the smart contract and perform actions on the database if needed
   static async executeSmartContract(
-    transaction, jsVMTimeout,
+  transaction, jsVMTimeout,
   ) {
     try {
       const {
@@ -23,10 +22,12 @@ class SmartContracts {
           events: [],
         },
       };
-
+      MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
+        let dbo = db.db("dconnectlive");
+        let collection = await dbo.collection("transactions");
+      });
       const rng = seedrandom(`${id}`);
-
-            // prepare the db object that will be available in the VM
+      // prepare the db object that will be available in the VM
       const db = {
         find: (table, query) => ()=>{
         },
@@ -43,7 +44,6 @@ class SmartContracts {
         update: (table, record) => ()=>{
         },
       };
-
       // initialize the state that will be available in the VM
       const vmState = {
         api: {
@@ -67,9 +67,7 @@ class SmartContracts {
       try {
         const payload = JSON.parse(transaction.payload);
         if(transaction.contract == 'system' && transaction.action == 'setcontract') {
-
           console.log('setting contract', payload.name, payload.code);
-
           contracts[payload.name] = payload.code;
         }
       } catch (e) {
@@ -81,26 +79,23 @@ class SmartContracts {
       if (error) {
         const { name, message } = error;
         if (name && typeof name === 'string'
-          && message && typeof message === 'string') {
+            && message && typeof message === 'string') {
           return { logs: { errors: [`${name}: ${message}`] } };
         }
-
         return { logs: { errors: ['unknown error'] } };
       }
-
       return results;
     } catch (e) {
       // console.error('ERROR DURING CONTRACT EXECUTION: ', e);
-       console.log('error', e); 
+      console.log('error', e); 
       return { logs: { errors: [`${e.name}: ${e.message}`] } };
     }
   }
-
   // run the contractCode in a VM with the vmState as a state for the VM
   static runContractCode(vmState, contractCode, jsVMTimeout) {
     return new Promise((resolve) => {
       try {
-         //console.log('vmState', vmState)
+        //console.log('vmState', vmState)
         // run the code in the VM
         const vm = new VM({
           timeout: jsVMTimeout,
@@ -118,7 +113,5 @@ class SmartContracts {
       }
     }); 
   }
-
 }
-
 module.exports.SmartContracts = SmartContracts;
