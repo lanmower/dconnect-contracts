@@ -1,6 +1,7 @@
 const { VM, VMScript } = require('vm2');
 const seedrandom = require('seedrandom');
 
+const contracts = {};
 class SmartContracts {
   // execute the smart contract and perform actions on the database if needed
   static async executeSmartContract(
@@ -14,7 +15,6 @@ class SmartContracts {
         action,
         payload
       } = transaction;
-      const contracts = {};
       // logs used to store events or errors
       const results = {
         logs: {
@@ -46,14 +46,18 @@ class SmartContracts {
         },
       };
       try {
-        payload = JSON.parse(payload);
+        const payload = JSON.parse(transaction.payload);
+        if(transaction.contract == 'system' && transaction.action == 'setcontract') {
+
+          console.log('setting contract', payload.name, payload.code);
+
+          contracts[payload.name] = payload.code;
+        }
       } catch (e) {
       }
-      if(transaction.contract == 'system' && transaction.action == 'setcontract') {
-        console.log('setting contract', transaction.payload);
-        contracts[payload.name] = payload.code;
-      }
+      console.log(contract, contracts);
       if(!contracts[contract]) return results;
+      console.log('running contract');
       const error = await SmartContracts.runContractCode(vmState, contracts[contract], jsVMTimeout);
       if (error) {
         const { name, message } = error;
