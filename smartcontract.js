@@ -1,6 +1,6 @@
 const { VM, VMScript } = require('vm2');
 const seedrandom = require('seedrandom');
-
+const contracts = [];
 
 class SmartContracts {
   // execute the smart contract and perform actions on the database if needed
@@ -46,9 +46,9 @@ class SmartContracts {
           },
         },
       };
+      if(!contracts[contract]) return;
       const error = await SmartContracts.runContractCode(vmState, contract, jsVMTimeout);
       if (error) {
-        console.log(error);
         const { name, message } = error;
         if (name && typeof name === 'string'
           && message && typeof message === 'string') {
@@ -77,12 +77,11 @@ class SmartContracts {
           sandbox: {
             ...vmState,
             done: (error) => {
-              console.log(error);
               resolve(error);
             },
           },
         });
-        vm.run("function(who) { console.log('hello '+ who); }");
+        vm.run(contractCode);
       } catch (err) {
         console.log(err);
         resolve(err);
