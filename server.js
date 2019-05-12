@@ -26,7 +26,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       contract:"api.emit('test', 'test')",
       action:'cuck',
       payload:{test:true}
-    });
+    }, 1000);
   });
   changeStreamCursor.on('change', next => {
     smartcontracts.executeSmartContract({
@@ -35,7 +35,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       contract:"api.emit('test', 'test')",
       action:'cuck',
       payload:{test:true}
-    }).fullDocument;
+    }, 1000).fullDocument;
     console.log(next);
   });
   // disconnect is fired when a client leaves the server

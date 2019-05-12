@@ -5,7 +5,7 @@ const seedrandom = require('seedrandom');
 class SmartContracts {
   // execute the smart contract and perform actions on the database if needed
   static async executeSmartContract(
-    transaction, timestamp, jsVMTimeout,
+    transaction, jsVMTimeout,
   ) {
     try {
       const {
@@ -83,7 +83,7 @@ class SmartContracts {
             },
           },
         });
-
+        console.log(contractCode, jsVMTimeout);
         vm.run(contractCode);
       } catch (err) {
         console.log(err);
