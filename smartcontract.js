@@ -48,7 +48,6 @@ class SmartContracts {
           },
         },
       };
-      console.log(contract);
       if(!contracts[contract]) return results;
       const error = await SmartContracts.runContractCode(vmState, contracts[contract], jsVMTimeout);
       if (error) {
