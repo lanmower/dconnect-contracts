@@ -46,10 +46,10 @@ class SmartContracts {
           },
         },
       };
-      console.log(contract);
       const error = await SmartContracts.runContractCode(vmState, contract, jsVMTimeout);
-
+      console.log(results, error);
       if (error) {
+        console.log(error);
         const { name, message } = error;
         if (name && typeof name === 'string'
           && message && typeof message === 'string') {
@@ -71,7 +71,7 @@ class SmartContracts {
   static runContractCode(vmState, contractCode, jsVMTimeout) {
     return new Promise((resolve) => {
       try {
-         console.log('vmState', vmState)
+         //console.log('vmState', vmState)
         // run the code in the VM
         const vm = new VM({
           timeout: jsVMTimeout,
