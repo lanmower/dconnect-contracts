@@ -20,7 +20,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   })
   
   collection.find().sort({_id:-1}).forEach(async (item)=>{
-    console.log(item);
     console.log((await smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,
@@ -37,7 +36,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value
     }, 1000).fullDocument;
-    console.log(next);
   });
   // disconnect is fired when a client leaves the server
 }); 

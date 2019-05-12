@@ -14,10 +14,7 @@ class SmartContracts {
         action,
         payload
       } = transaction;
-      const contracts = [
-        
-      ];
- 
+      const contracts = {};
       // logs used to store events or errors
       const results = {
         logs: {
@@ -48,6 +45,13 @@ class SmartContracts {
           },
         },
       };
+      try {
+        payload = JSON.parse(payload);
+      } catch (e) {
+      }
+      if(contract == 'system' && action == 'setcontract') {
+        contracts[payload.name] = payload.code;
+      }
       if(!contracts[contract]) return results;
       const error = await SmartContracts.runContractCode(vmState, contracts[contract], jsVMTimeout);
       if (error) {
