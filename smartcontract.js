@@ -15,8 +15,7 @@ class SmartContracts {
         action,
         payload
       } = transaction;
-
-      const payloadObj = payload ? JSON.parse(payload) : {};
+ 
       // logs used to store events or errors
       const results = {
         logs: {
@@ -33,7 +32,7 @@ class SmartContracts {
           sender,
           id,
           action,
-          payload: JSON.parse(JSON.stringify(payloadObj)),
+          payload: JSON.parse(JSON.stringify(payload)),
           random: () => rng(),
           debug: log => console.log(log), // eslint-disable-line no-console
           // emit an event that will be stored in the logs
@@ -63,7 +62,7 @@ class SmartContracts {
       return results;
     } catch (e) {
       // console.error('ERROR DURING CONTRACT EXECUTION: ', e);
-       console.log('error', e);
+       console.log('error', e); 
       return { logs: { errors: [`${e.name}: ${e.message}`] } };
     }
   }
