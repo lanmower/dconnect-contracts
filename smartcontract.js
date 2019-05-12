@@ -7,6 +7,7 @@ class SmartContracts {
   static async executeSmartContract(
     transaction, timestamp, jsVMTimeout,
   ) {
+  console.log(transaction);
     try {
       const {
         id,
@@ -17,7 +18,6 @@ class SmartContracts {
       } = transaction;
 
       const payloadObj = payload ? JSON.parse(payload) : {};
-
       // logs used to store events or errors
       const results = {
         logs: {
@@ -48,7 +48,7 @@ class SmartContracts {
           },
         },
       };
-
+      console.log();
       const error = await SmartContracts.runContractCode(vmState, contract, jsVMTimeout);
 
       if (error) {
