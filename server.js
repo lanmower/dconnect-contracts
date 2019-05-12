@@ -19,14 +19,15 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     
   })
   
-  collection.find().sort({_id:-1}).forEach((item)=>{
-    smartcontracts.executeSmartContract({
+  collection.find().sort({_id:-1}).forEach(async (item)=>{
+    await smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,
       contract:"api.emit('test', 'test')",
       action:'cuck',
       payload:{test:true}
     }, 1000);
+    console.log('test');
   });
   changeStreamCursor.on('change', next => {
     smartcontracts.executeSmartContract({
