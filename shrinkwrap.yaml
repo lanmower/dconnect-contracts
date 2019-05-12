@@ -2,6 +2,8 @@ dependencies:
   JSONStream: 1.3.5
   express: 4.16.4
   mongodb: 3.2.4
+  seedrandom: 3.0.1
+  vm2: 3.8.1
 packages:
   /JSONStream/1.3.5:
     dependencies:
@@ -358,6 +360,10 @@ packages:
     optional: true
     resolution:
       integrity: sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==
+  /seedrandom/3.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-1/02Y/rUeU1CJBAGLebiC5Lbo5FnB22gQbIFFYTLkwvp1xdABZJH1sn4ZT1MzXmPpzv+Rf/Lu2NcsLJiK4rcDg==
   /semver/5.7.0:
     dev: false
     hasBin: true
@@ -448,6 +454,13 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+  /vm2/3.8.1:
+    dev: false
+    engines:
+      node: '>=6.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-ecR1+KFuP7KK2hpo8ItamW0F9pq4dJOd4o+r6OWvAsx2eXGPshP6uKE24qepGshT8v+TF0jpnzugFJak42LuZQ==
 registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
@@ -455,3 +468,5 @@ specifiers:
   JSONStream: ^1.3.5
   express: ^4.16.4
   mongodb: ^3.2.4
+  seedrandom: ^3.0.1
+  vm2: ^3.8.1

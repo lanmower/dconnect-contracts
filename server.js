@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static('public'));
 const server = http.createServer(app);
 var MongoClient = require('mongodb').MongoClient;
-
+const smartconracts = require('./smartcontract.js')
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   let dbo = db.db("dconnectlive");
   let collection = await dbo.collection("transactions");
