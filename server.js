@@ -7,7 +7,6 @@ app.use(express.static('public'));
 const server = http.createServer(app);
 var MongoClient = require('mongodb').MongoClient;
 const  smartcontracts = require('./smartcontract.js').SmartContracts;
-console.log(smartcontracts);
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   let dbo = db.db("dconnectlive");
   let collection = await dbo.collection("transactions");
@@ -26,15 +25,20 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       sender:item.authorization[0].actor,
       contract:"console.log('test')",
       action:'cuck',
-      payload:{test:true},
+      payload:{test:true}
     });
-    console.log(item);
   });
   changeStreamCursor.on('change', next => {
-    console.log(next);  
+    smartcontracts.executeSmartContract({
+      id:item.transactionId,
+      sender:item.authorization[0].actor,
+      contract:"console.log('test')",
+      action:'cuck',
+      payload:{test:true}
+    });
   });
   // disconnect is fired when a client leaves the server
-});
+}); 
 
 /* Below mentioned steps are performed to return the Frontend build of create-react-app from build folder of backend Comment it out if running locally*/
 
