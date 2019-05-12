@@ -19,7 +19,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     
   })
   
-  collection.find().sort({_id:-1}).forEach(async (item)=>{
+  collection.find().sort({_id:1}).forEach(async (item)=>{
     console.log((await smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,

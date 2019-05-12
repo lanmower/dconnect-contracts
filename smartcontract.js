@@ -49,9 +49,8 @@ class SmartContracts {
         payload = JSON.parse(payload);
       } catch (e) {
       }
-      console.log(contract, action);
-      if(contract == 'system' && action == 'setcontract') {
-        console.log('setting contract');
+      if(transaction.contract == 'system' && transaction.action == 'setcontract') {
+        console.log('setting contract', transaction.payload);
         contracts[payload.name] = payload.code;
       }
       if(!contracts[contract]) return results;
@@ -94,7 +93,7 @@ class SmartContracts {
         console.log(err);
         resolve(err);
       }
-    });
+    }); 
   }
 
 }
