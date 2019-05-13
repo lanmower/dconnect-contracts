@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/eosjs@15.0.3/lib/eos.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.1/seedrandom.min.js"></script>
     <!--script type="text/javascript" src="eos.js"></script-->
     <link rel="shortcut icon" type="image/png" href="favicon-96x96.png"/>
 </head>
@@ -20,7 +21,7 @@
             <ul class="uk-navbar-nav">
               <li>
                 <form>
-                <input name="q"/>
+                <input id="name" name="q"/>
                   <a href="#" id="save">SAVE</a>
                   <a href="#" id="test" style="position:absolute; right:25px; top:0px;">TEST</a>
                 </form>
@@ -59,37 +60,35 @@
           editor.getSession().setUseWorker(false);
           editor.setTheme("ace/theme/monokai");
           editor.getSession().setMode("ace/mode/javascript");
-             const vmState = { 
-        api: { 
-          sender,
-          id,
-          action,
-          collection,
-          fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-          payload: payload,
-          random: () => rng(),
-          debug: log => console.log(log), 
-          emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
-          assert: (condition, error) => {
-            if (!condition && typeof error === 'string') {
-              results.logs.errors.push(error);
-            }
-            return condition;
-          },
-        },
-      };
+          const rng = Math.seedrandom();
+
         document.getElementById('test').onclick = ()=>{
+            const vmState = { 
+              api: { 
+                sender:"sender",
+                id:"id",
+                action:document.getElementById('name').value,
+                collection:{find:(query)=>{console.log("FIND:", query)}, update:(query)=>{console.log("FIND:", query)}, insert:(query)=>{console.log("FIND:", query)}},
+                fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
+                payload: payload,
+                random: () => rng(),
+                debug: log => console.log(log), 
+                emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
+                assert: (condition, error) => {
+                  if (!condition && typeof error === 'string') {
+                    results.logs.errors.push(error);
+                  }
+                  return condition;
+                },
+              },
+            };
             function evalInContext() {
                 console.log(this); 
                 eval(rpc.getValue());
             }
           
-            evalInContext.call(
-              {
-                api:{
-                }
-              });
-        });
+            evalInContext.call(vmState);
+        };
         
         document.getElementById('save').onclick = ()=>{
           ScatterJS.scatter.connect('dconnectlive').then(connected => {
