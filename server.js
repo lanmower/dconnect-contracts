@@ -26,6 +26,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const changeStreamCursor = collection.watch();
+   processed.drop();
   collection.find().forEach(async (item)=>{
     
     if(await processed.findOne({_id:item._id})) return;

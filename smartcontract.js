@@ -19,12 +19,12 @@ class SmartContracts {
           events: [],
         },
       }; 
-      console.log(transaction);
       let collection = await dbo.collection(contract);
       let contracts = await dbo.collection('contract');
       const rng = seedrandom(`${id}`);
       // initialize the state that will be available in the VM
       var payload = null;
+      //console.log(transaction.payload);
       try {
         payload = JSON.parse(transaction.payload);
       } catch(e) {
@@ -55,10 +55,10 @@ class SmartContracts {
           },
         },
       };
-      const loadedcontract = await contracts.findOne({contract:sender, action:payload.action});
+      const loadedcontract = await contracts.findOne({contract, action:payload.action});
       
+      console.log(loadedcontract, ); 
       if(!loadedcontract) return results;
-
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {
         console.log(error);
