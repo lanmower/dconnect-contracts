@@ -36,13 +36,14 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     if(res && res.logs && res.logs.events && res.logs.events.length) console.log(res.logs.events);
   });
   changeStreamCursor.on('change', next => {
-    smartcontracts.executeSmartContract({
+    const res = smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,
       contract:item.data.app,
       action:item.data.key,
       payload:item.data.value
     }, 1000,dbo).fullDocument;
+    if(res && res.logs && res.logs.events && res.logs.events.length) console.log(res.logs.events);
   });
   // disconnect is fired when a client leaves the server
 }); 
