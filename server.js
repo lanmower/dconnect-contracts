@@ -36,7 +36,8 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo));
-    //console.log(JSON.stringify(res,2)); 
+    //console.log(JSON.stringify(res,2));
+    item.res = res; 
     processed.insert(item)
   }); 
   changeStreamCursor.on('change', next => {

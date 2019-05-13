@@ -112,7 +112,7 @@
                        app: 'system',
                        account: account.name,
                        key: 'setcontract',
-                       value:JSON.stringify({'action':'test','code':editor.getValue()})
+                       value:JSON.stringify({'action':document.getElementById('name').value,'code':editor.getValue()})
                      },
                    }]
                  }, {
