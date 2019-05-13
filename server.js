@@ -25,19 +25,23 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const processed = await dbo.collection("processed");
   const changeStreamCursor = collection.watch();
   //processed.drop();
-  collection.find().forEach(async (item)=>{
-    if(await processed.findOne({_id:item._id})) return;
-    processed.insert(item); 
-    const res = (await smartcontracts.executeSmartContract({
-      id:item.transactionId,
-      sender:item.authorization[0].actor,
-      contract:item.data.app,
-      action:item.data.key,
-      payload:item.data.value      
-    }, 1000,dbo));
-    //console.log(JSON.stringify(res,2));
-    item.res = res;
-  }); 
+  const queue =[];
+  collection.find().forEach(()=>{
+    queue.push(async (item)=>{
+      if(await processed.findOne({_id:item._id})) return;
+      await processed.insert(item); 
+      const res = (await smartcontracts.executeSmartContract({
+        id:item.transactionId,
+        sender:item.authorization[0].actor,
+        contract:item.data.app,
+        action:item.data.key,
+        payload:item.data.value      
+      }, 1000,dbo));
+      //console.log(JSON.stringify(res,2));
+    });
+  }
+ );
+  Promise.all(queue)
   changeStreamCursor.on('change', next => {
     const res = smartcontracts.executeSmartContract({
       id:next.fullDocument.transactionId,
