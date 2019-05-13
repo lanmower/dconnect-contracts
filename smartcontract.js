@@ -55,9 +55,9 @@ class SmartContracts {
           },
         },
       };
-      const loadedcontract = await contracts.findOne({contract, action:payload.action});
+      const loadedcontract = await contracts.findOne({contract, action:action});
       
-      console.log(loadedcontract, ); 
+      console.log(loadedcontract, {contract, action:action}); 
       if(!loadedcontract) return results;
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {
