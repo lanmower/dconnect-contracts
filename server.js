@@ -9,16 +9,22 @@ var MongoClient = require('mongodb').MongoClient;
 const  smartcontracts = require('./smartcontract.js').SmartContracts;
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   let dbo = db.db("dconnectlive");
-  let collection = await dbo.collection("transactions");
-  const changeStreamCursor = collection.watch();
   
-  app.get('/transactions', (req, res) => {
+  app.get('/transactions', async (req, res) => {
+    const collection = await dbo.collection("transactions");
     collection.find().sort({_id:-1})
       .pipe(require('JSONStream').stringify())
       .pipe(res.type('json'));
-    
   })
   
+  app.get('/state', async (req, res) => {
+    const collection = await dbo.collection("state");
+    collection.find().sort({_id:-1})
+      .pipe(require('JSONStream').stringify())
+      .pipe(res.type('json'));
+  })
+  const collection = await dbo.collection("transactions");
+  const changeStreamCursor = collection.watch();
   collection.find().sort({_id:1}).forEach(async (item)=>{
     console.log((await smartcontracts.executeSmartContract({
       id:item.transactionId,
