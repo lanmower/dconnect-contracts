@@ -24,8 +24,12 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       .pipe(res.type('json'));
   })
   const collection = await dbo.collection("transactions");
+  const processed = await dbo.collection("processed");
   const changeStreamCursor = collection.watch();
-  collection.find().sort({_id:1}).forEach(async (item)=>{
+  collection.find().forEach(async (item)=>{
+    console.log(processed.findOne({_id:item._id}));
+    if(processed.findOne({_id:item._id})) return;
+    processed.insert(item)
     const res = (await smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,
@@ -33,7 +37,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo));
-    console.log(res);
+    console.log(res); 
   });
   changeStreamCursor.on('change', next => {
     console.log(next);

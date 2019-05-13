@@ -32,7 +32,10 @@ class SmartContracts {
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
         if(!payload.code || !payload.contract || !payload.action) return results;
         console.log('setting contract', payload);
-        if(!contracts[payload.contract]) contracts[payload.contract] = {};
+        if(!contracts[payload.contract]) {
+          contracts[payload.contract] = {};
+          collection.deleteMany({});
+        }
         contracts[payload.contract][payload.action] = payload.code;
       }
       
