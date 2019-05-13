@@ -13,8 +13,7 @@
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
     <script type="text/javascript" src="eos.js"></script>
-    <button onclick="
-eos.transaction({
+    <button onclick="eos.transaction({
          actions: [{
            account: 'dconnectlive',
            name: 'set',
@@ -26,7 +25,7 @@ eos.transaction({
              app: 'system',
              account: account.name,
              key: 'setcontract',
-             value:JSON.stringify({})
+             value:JSON.stringify({contract:'debug', 'action':'print','code':'api.emit(\'log\',api.payload);done();'})
            },
          }]
        }, {

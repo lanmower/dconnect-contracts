@@ -49,7 +49,7 @@ class SmartContracts {
       try{
         const payload = JSON.parse(transaction.payload);
         if(transaction.contract == 'system' && transaction.action == 'setcontract') {
-          console.log('setting contract', payload.name, payload.code);
+          console.log('setting contract', payload);
           if(!payload.code && !payload.contract && !payload.action) return results;
           contracts[payload.action][payload.contract] = payload.code;
         }
