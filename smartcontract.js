@@ -31,12 +31,12 @@ class SmartContracts {
       }
       if(!payload) return results;
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
+        if(!payload.code || !payload.action) return results;
         console.log("setting contract", {contract:sender, action:payload.action, code:payload.code});
-        if(!payload.code || !payload.contract || !payload.action) return results;
         await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
         results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
         return results;
-      } 
+      }   
       const vmState = { 
         api: { 
           sender,
@@ -89,7 +89,6 @@ class SmartContracts {
             },
           },
         });
-        console.log(contractCode);
         vm.run(contractCode);
       } catch (err) {
         resolve({
