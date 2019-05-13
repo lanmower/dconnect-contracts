@@ -5,7 +5,7 @@ const contracts = {};
 class SmartContracts {
   // execute the smart contract and perform actions on the database if needed
   static async executeSmartContract(
-  transaction, jsVMTimeout,
+  transaction, jsVMTimeout, dbo
   ) {
     try {
       const {
@@ -22,9 +22,7 @@ class SmartContracts {
           events: [],
         },
       };
-      console.log('tet');
-      MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
-        let dbo = db.db("dconnectlive");
+ 
         let collection = await dbo.collection(contract);
         const rng = seedrandom(`${id}`);
         // initialize the state that will be available in the VM
@@ -51,11 +49,11 @@ class SmartContracts {
         };
         try{
         payload = JSON.parse(transaction.payload);
-        } catch(e) {}
         if(transaction.contract == 'system' && transaction.action == 'setcontract') {
           console.log('setting contract', payload.name, payload.code);
           contracts[payload.name] = payload.code;
         }
+        } catch(e) {}
         console.log(contract, contracts);
         if(!contracts[contract]) return results;
         console.log('running contract');
@@ -69,7 +67,6 @@ class SmartContracts {
           return { logs: { errors: ['unknown error'] } };
         }
         return results;
-      });
     } catch (e) {
       console.log('error', e); 
       return { logs: { errors: [`${e.name}: ${e.message}`] } };

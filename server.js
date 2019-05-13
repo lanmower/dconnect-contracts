@@ -26,8 +26,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       contract:item.data.app,
       action:item.data.key,
       payload:item.data.value
-    }, 1000)).logs.events);
-  });
+      
+    }, 1000,dbo)).logs.events);
+  }); 
   changeStreamCursor.on('change', next => {
     smartcontracts.executeSmartContract({
       id:item.transactionId,
@@ -35,7 +36,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       contract:item.data.app,
       action:item.data.key,
       payload:item.data.value
-    }, 1000).fullDocument;
+    }, 1000,dbo).fullDocument;
   });
   // disconnect is fired when a client leaves the server
 }); 
