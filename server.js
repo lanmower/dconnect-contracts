@@ -16,7 +16,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       .pipe(require('JSONStream').stringify())
       .pipe(res.type('json'));
   })
-  
   app.get('/state', async (req, res) => {
     const collection = await dbo.collection("state");
     collection.find().sort({_id:-1})
