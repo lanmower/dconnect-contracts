@@ -34,7 +34,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       payload:item.data.value
       
     }, 1000,dbo));
-    if(res && res.logs && resres.logs.events.length)console.log(res.logs.events);
+    if(res && res.logs && res.logs.events && res.logs.events.length) console.log(res.logs.events);
   }); 
   changeStreamCursor.on('change', next => {
     smartcontracts.executeSmartContract({

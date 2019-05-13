@@ -29,8 +29,10 @@ class SmartContracts {
         const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.contract || !payload.action) return results;
         console.log('setting contract', payload);
+        if(!contracts[payload.action]) contracts[payload.action] = {};
         contracts[payload.action][payload.contract] = payload.code;
       }
+      
       const vmState = {
         api: {
           sender,
@@ -52,6 +54,7 @@ class SmartContracts {
           },
         },
       };
+      
       if(!contracts[contract]) return results;
       console.log('running contract');
       const error = await SmartContracts.runContractCode(vmState, contracts[contract], jsVMTimeout);
@@ -86,7 +89,12 @@ class SmartContracts {
         });
         vm.run(contractCode);
       } catch (err) {
-        resolve(err);
+        resolve({
+        logs: {
+          errors: [err],
+          events: [],
+        },
+      });
       }
     }); 
   }
