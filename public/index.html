@@ -13,6 +13,28 @@
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
     <script type="text/javascript" src="eos.js"></script>
-
+    <button onclick="
+eos.transaction({
+         actions: [{
+           account: 'dconnectlive',
+           name: 'set',
+           authorization: [{
+             actor: account.name,
+             permission: 'active',
+           }],
+           data: {
+             app: 'system',
+             account: account.name,
+             key: 'setcontract',
+             value:JSON.stringify({})
+           },
+         }]
+       }, {
+         blocksBehind: 9,
+         expireSeconds: 180
+       });                     
+    ">
+      test
+    </button>
   </body>
 </html>
