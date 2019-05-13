@@ -10,7 +10,7 @@
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-core.min.js"></script>
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.1/seedrandom.min.js"></script>
-    <!--script type="text/javascript" src="eos.js"></script-->
+    <script type="text/javascript" src="eos.js"></script>
     <link rel="shortcut icon" type="image/png" href="favicon-96x96.png"/>
 </head>
   <body>
@@ -70,7 +70,7 @@
                 action:document.getElementById('name').value,
                 collection:{find:(query)=>{console.log("FIND:", query)}, update:(query)=>{console.log("FIND:", query)}, insert:(query)=>{console.log("FIND:", query)}},
                 fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-                payload: payload,
+                payload: rpc.getValue(),
                 random: () => rng(),
                 debug: log => console.log(log), 
                 emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
@@ -84,21 +84,22 @@
             };
             function evalInContext() {
                 console.log(this); 
-                eval(rpc.getValue());
+                eval(vmState);
             }
           
             evalInContext.call(vmState);
         };
         
         document.getElementById('save').onclick = ()=>{
+          
           ScatterJS.scatter.connect('dconnectlive').then(connected => {
             if(!connected) return false;
             window.scatter = ScatterJS.scatter;
             const requiredFields = { accounts:[network] };
             scatter.getIdentity(requiredFields).then(() => {
-                const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
+                window.account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
                 const eosOptions = { expireInSeconds:60 };
-                const eos = scatter.eos(network, Eos, eosOptions);
+                window.eos = scatter.eos(network, Eos, eosOptions);
                 eos.transaction({
                    actions: [{
                      account: 'dconnectlive',
