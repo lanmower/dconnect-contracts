@@ -37,10 +37,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo));
-    console.log(res); 
+    console.log(JSON.stringify(res,2)); 
   }); 
   changeStreamCursor.on('change', next => {
-    console.log(next);
     const res = smartcontracts.executeSmartContract({
       id:next.fullDocument.transactionId,
       sender:next.fullDocument.authorization[0].actor,

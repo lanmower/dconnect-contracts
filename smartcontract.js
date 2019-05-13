@@ -2,7 +2,6 @@ var MongoClient = require('mongodb').MongoClient;
 const { VM, VMScript } = require('vm2');
 const seedrandom = require('seedrandom');
 class SmartContracts {
-  // execute the smart contract and perform actions on the database if needed
   static async executeSmartContract(
   transaction, jsVMTimeout, dbo
   ) {
@@ -19,7 +18,8 @@ class SmartContracts {
           errors: [],
           events: [],
         },
-      };
+      }; 
+      console.log(transaction);
       let collection = await dbo.collection(contract);
       let contracts = await dbo.collection('contract');
       const rng = seedrandom(`${id}`);
@@ -33,6 +33,8 @@ class SmartContracts {
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
         if(!payload.code || !payload.contract || !payload.action) return results;
         await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
+        results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
+        return results;
       } 
       const vmState = { 
         api: { 
