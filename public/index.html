@@ -60,6 +60,15 @@
           editor.setTheme("ace/theme/monokai");
           editor.getSession().setMode("ace/mode/javascript");
         document.getElementById('test').onclick = ()=>{
+            function evalInContext() {
+                console.log(this); 
+                eval(rpc.getValue());
+            }
+            evalInContext.call(
+              {
+                api:{
+                }
+              });
         });
         document.getElementById('save').onclick = ()=>{
           ScatterJS.scatter.connect('dconnectlive').then(connected => {
