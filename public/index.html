@@ -3,7 +3,7 @@
   <head>   
     <title>Welcome to dConnect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/css/uikit.min.css" />
-      <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit-icons.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/eosjs@15.0.3/lib/eos.min.js" crossorigin="anonymous"></script>
@@ -21,28 +21,7 @@
               <li>
                 <form>
                 <input name="q"/>
-                </form>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
-
-  
-      <div class="uk-flex uk-height-medium uk-margin uk-text-center">
-        <div class="uk-text-left">
-             
-           <div class="editable" id="text" data-label="page"></div>
-           <div class="code" id="code" data-label="page"></div>
-        </div>
-      </div>
-    <script>
-    window.editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setUseWorker(false);
-      
-    editor.session.setMode("ace/mode/javascript");
-      /*        eos.transaction({
+                  <button onclick="eos.transaction({
                  actions: [{
                    account: 'dconnectlive',
                    name: 'set',
@@ -54,14 +33,36 @@
                      app: 'system',
                      account: account.name,
                      key: 'setcontract',
-                     value:JSON.stringify({'action':'test','code':value})
+                     value:JSON.stringify({'action':'test','code':editor.getValue()})
                    },
                  }]
                }, {
                  blocksBehind: 9,
                  expireSeconds: 180
-               });  
-*/
+               });  "></button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+  
+      <div class="uk-flex uk-height-medium uk-margin uk-text-center">
+        <div class="uk-text-left">
+             
+           <div id="editor"></div>
+           <div class="code" id="code" data-label="page"></div>
+        </div>
+      </div>
+    <script>
+    window.editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setUseWorker(false);
+      
+    editor.session.setMode("ace/mode/javascript");
+        
+
 </script>
   </body>
 </html>
