@@ -1,8 +1,5 @@
-// Don't forget to tell ScatterJS which plugins you are using.
 ScatterJS.plugins( new ScatterEOS() );
 
-// Networks are used to reference certain blockchains.
-// They let you get accounts and help you build signature providers.
 const network = {
     blockchain:'eos',
     protocol:'https',
@@ -10,63 +7,17 @@ const network = {
     port:443,
     chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 }
-
-// First we need to connect to the user's Scatter.
-ScatterJS.scatter.connect('My-App').then(connected => {
-
-    // If the user does not have Scatter or it is Locked or Closed this will return false;
+ScatterJS.scatter.connect('dconnectlive').then(connected => {
     if(!connected) return false;
-    console.log('loaded');
     window.scatter = ScatterJS.scatter;
-
-    // Now we need to get an identity from the user.
-    // We're also going to require an account that is connected to the network we're using.
     const requiredFields = { accounts:[network] };
     scatter.getIdentity(requiredFields).then(() => {
-
-        // Always use the accounts you got back from Scatter. Never hardcode them even if you are prompting
-        // the user for their account name beforehand. They could still give you a different account.
         const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
-
-        // You can pass in any additional options you want into the eosjs reference.
         const eosOptions = { expireInSeconds:60 };
-
-        // Get a proxy reference to eosjs which you can use to sign transactions with a user's Scatter.
         window.eos = scatter.eos(network, Eos, eosOptions);
-
-        // ----------------------------
-        // Now that we have an identity,
-        // an EOSIO account, and a reference
-        // to an eosjs object we can send a transaction.
-        // ----------------------------
         window.account = account;
-
-        // Never assume the account's permission/authority. Always take it from the returned account.
         const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
-/*
-eos.transaction({
-         actions: [{
-           account: 'dconnectlive',
-           name: 'set',
-           authorization: [{
-             actor: account.name,
-             permission: 'active',
-           }],
-           data: {
-             app: 'anytext',
-             account: account.name,
-             key: 'anytext',
-             value:'value'
-           },
-         }]
-       }, {
-         blocksBehind: 9,
-         expireSeconds: 180
-       });
-*/
-
     }).catch(error => {
-        // The user rejected this request, or doesn't have the appropriate requirements.
         console.error(error);
     });
 });

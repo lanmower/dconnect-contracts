@@ -21,49 +21,68 @@
               <li>
                 <form>
                 <input name="q"/>
-                  <button onclick="eos.transaction({
-                 actions: [{
-                   account: 'dconnectlive',
-                   name: 'set',
-                   authorization: [{
-                     actor: account.name,
-                     permission: 'active',
-                   }],
-                   data: {
-                     app: 'system',
-                     account: account.name,
-                     key: 'setcontract',
-                     value:JSON.stringify({'action':'test','code':editor.getValue()})
-                   },
-                 }]
-               }, {
-                 blocksBehind: 9,
-                 expireSeconds: 180
-               });  "></button>
+                  <button id="save">SAVE</button>
                 </form>
               </li>
             </ul>
           </div>
         </nav>
       </div>
+      <style>
+      #editor {
+          position: absolute;
+          top:25px;
+          bottom: 0px;
+          left:0px;
+          right:0px;
+          width:100%;
+          height:100%;
+      }
+      </style>
+      <div id="editor">done();//your action must end with this</div>
+      <script>
+          var editor = ace.edit("editor");
+          editor.getSession().setUseWorker(false);
+          editor.setTheme("ace/theme/monokai");
+          editor.getSession().setMode("ace/mode/javascript");
+        document.getElmenetById('save').onclick = ()=>{
+          ScatterJS.scatter.connect('dconnectlive').then(connected => {
+            if(!connected) return false;
+            window.scatter = ScatterJS.scatter;
+            const requiredFields = { accounts:[network] };
+            scatter.getIdentity(requiredFields).then(() => {
+                const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
+                const eosOptions = { expireInSeconds:60 };
+                const eos = scatter.eos(network, Eos, eosOptions);
+                eos.transaction({
+                   actions: [{
+                     account: 'dconnectlive',
+                     name: 'set',
+                     authorization: [{
+                       actor: account.name,
+                       permission: 'active',
+                     }],
+                     data: {
+                       app: 'system',
+                       account: account.name,
+                       key: 'setcontract',
+                       value:JSON.stringify({'action':'test','code':editor.getValue()})
+                     },
+                   }]
+                 }, {
+                   blocksBehind: 9,
+                   expireSeconds: 180
+                 });
+                const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
+            }).catch(error => {
+                console.error(error);
+            });
+            return false;
+        });
 
-  
-      <div class="uk-flex uk-height-medium uk-margin uk-text-center">
-        <div class="uk-text-left">
-             
-           <div id="editor"></div>
-           <div class="code" id="code" data-label="page"></div>
-        </div>
-      </div>
-    <script>
-    window.editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setUseWorker(false);
-      
-    editor.session.setMode("ace/mode/javascript");
-        
-
-</script>
+          
+        }
+      </script>
   </body>
 </html>
 
