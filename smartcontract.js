@@ -31,6 +31,7 @@ class SmartContracts {
       }
       if(!payload) return results;
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
+        console.log("setting contract", {contract:sender, action:payload.action, code:payload.code});
         if(!payload.code || !payload.contract || !payload.action) return results;
         await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
         results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
@@ -57,7 +58,7 @@ class SmartContracts {
       };
       const loadedcontract = await contracts.findOne({contract, action:action});
       
-      console.log(loadedcontract, {contract, action:action}); 
+      //console.log(loadedcontract, {contract, action:action}); 
       if(!loadedcontract) return results;
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {

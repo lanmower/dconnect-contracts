@@ -21,7 +21,7 @@
               <li>
                 <form>
                 <input name="q"/>
-                  <button id="save">SAVE</button>
+                  <a href="#" id="save">SAVE</a>
                 </form>
               </li>
             </ul>
@@ -45,7 +45,7 @@
           editor.getSession().setUseWorker(false);
           editor.setTheme("ace/theme/monokai");
           editor.getSession().setMode("ace/mode/javascript");
-        document.getElmenetById('save').onclick = ()=>{
+        document.getElementById('save').onclick = ()=>{
           ScatterJS.scatter.connect('dconnectlive').then(connected => {
             if(!connected) return false;
             window.scatter = ScatterJS.scatter;

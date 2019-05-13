@@ -37,7 +37,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo));
-    console.log(JSON.stringify(res,2)); 
+    //console.log(JSON.stringify(res,2)); 
     processed.insert(item)
   }); 
   changeStreamCursor.on('change', next => {
@@ -48,7 +48,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:next.fullDocument.data.key,
       payload:next.fullDocument.data.value
     }, 1000,dbo).fullDocument;
-    if(res && res.logs && res.logs.events && res.logs.events.length) console.log(res.logs.events);
+    //if(res && res.logs && res.logs.events && res.logs.events.length) console.log(res.logs.events);
   });
   // disconnect is fired when a client leaves the server
 }); 
