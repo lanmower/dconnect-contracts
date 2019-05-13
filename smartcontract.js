@@ -25,6 +25,12 @@ class SmartContracts {
       let collection = await dbo.collection(contract);
       const rng = seedrandom(`${id}`);
       // initialize the state that will be available in the VM
+      if(transaction.contract == 'system' && transaction.action == 'setcontract') {
+        const payload = JSON.parse(transaction.payload);
+        if(!payload.code || !payload.contract || !payload.action) return results;
+        console.log('setting contract', payload);
+        contracts[payload.action][payload.contract] = payload.code;
+      }
       const vmState = {
         api: {
           sender,
@@ -32,7 +38,7 @@ class SmartContracts {
           action,
           collection,
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-          payload: JSON.parse(JSON.stringify(payload)),
+          payload: JSON.parse(payload),
           random: () => rng(),
           debug: log => console.log(log), // eslint-disable-line no-console
           // emit an event that will be stored in the logs
@@ -46,16 +52,6 @@ class SmartContracts {
           },
         },
       };
-      try{
-        const payload = JSON.parse(transaction.payload);
-        if(transaction.contract == 'system' && transaction.action == 'setcontract') {
-          console.log('setting contract', payload);
-          if(!payload.code && !payload.contract && !payload.action) return results;
-          contracts[payload.action][payload.contract] = payload.code;
-        }
-      } catch(e) { 
-      } 
-      console.log(contract, contracts);
       if(!contracts[contract]) return results;
       console.log('running contract');
       const error = await SmartContracts.runContractCode(vmState, contracts[contract], jsVMTimeout);
@@ -90,7 +86,6 @@ class SmartContracts {
         });
         vm.run(contractCode);
       } catch (err) {
-        console.log(err);
         resolve(err);
       }
     }); 
