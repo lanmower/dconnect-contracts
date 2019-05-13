@@ -32,8 +32,8 @@ class SmartContracts {
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
         if(!payload.code || !payload.contract || !payload.action) return results;
         console.log('setting contract', payload);
-        if(!contracts[payload.action]) contracts[payload.action] = {};
-        contracts[payload.action][payload.contract] = payload.code;
+        if(!contracts[payload.contract]) contracts[payload.contract] = {};
+        contracts[payload.contract][payload.action] = payload.code;
       }
       
       const vmState = {
@@ -57,11 +57,11 @@ class SmartContracts {
           },
         },
       };
-      
       if(!contracts[contract]) return results;
       console.log('running contract');
-      const error = await SmartContracts.runContractCode(vmState, contracts[contract], jsVMTimeout);
+      const error = await SmartContracts.runContractCode(vmState, contracts[contract][action], jsVMTimeout);
       if (error) {
+        console.log(error);
         const { name, message } = error;
         if (name && typeof name === 'string'
             && message && typeof message === 'string') {
