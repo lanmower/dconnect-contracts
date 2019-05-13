@@ -26,7 +26,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const changeStreamCursor = collection.watch();
   processed.drop();
   const queue =[];
-  collection.find().sort({_id:1}).forEach(async (item)=>{
+  let cursor = collection.find().sort({timestamp:-1});
+  while ( await cursor.hasNext() ) {  // will return false when there are no more results
+    let item = await cursor.next();    // actually gets the document
     console.log(item.data.key);
     if(await processed.findOne({_id:item._id})) return;
       await processed.insert(item); 
@@ -37,7 +39,8 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
         action:item.data.key,
         payload:item.data.value      
       }, 1000,dbo);
-  });
+  }
+  
   changeStreamCursor.on('change', next => {
     const res = smartcontracts.executeSmartContract({
       id:next.fullDocument.transactionId,
