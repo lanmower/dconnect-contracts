@@ -60,6 +60,11 @@ class SmartContracts {
       
       //console.log(loadedcontract, {contract, action:action}); 
       if(!loadedcontract) return results;
+      console.log(sender);
+      if(sender == 'dconnectlive' && payload.author) {
+        vmState.api.sender == payload.author;
+      }
+      
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {
         console.log(error);
