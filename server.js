@@ -31,11 +31,10 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       sender:item.authorization[0].actor,
       contract:item.data.app,
       action:item.data.key,
-      payload:item.data.value
-      
+      payload:item.data.value      
     }, 1000,dbo));
     if(res && res.logs && res.logs.events && res.logs.events.length) console.log(res.logs.events);
-  }); 
+  });
   changeStreamCursor.on('change', next => {
     smartcontracts.executeSmartContract({
       id:item.transactionId,

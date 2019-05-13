@@ -12,8 +12,7 @@ class SmartContracts {
         id,
         sender,
         contract,
-        action,
-        payload
+        action
       } = transaction;
       // logs used to store events or errors
       const results = {
@@ -25,8 +24,12 @@ class SmartContracts {
       let collection = await dbo.collection(contract);
       const rng = seedrandom(`${id}`);
       // initialize the state that will be available in the VM
+      var payload = null;
+      try {
+        payload = JSON.parse(transaction.payload);
+      } catch(e) {
+      }
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
-        const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.contract || !payload.action) return results;
         console.log('setting contract', payload);
         if(!contracts[payload.action]) contracts[payload.action] = {};
@@ -40,7 +43,7 @@ class SmartContracts {
           action,
           collection,
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-          payload: JSON.parse(payload),
+          payload: payload,
           random: () => rng(),
           debug: log => console.log(log), // eslint-disable-line no-console
           // emit an event that will be stored in the logs
