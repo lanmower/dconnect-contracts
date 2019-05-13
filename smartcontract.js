@@ -55,7 +55,7 @@ class SmartContracts {
             return condition;
           },
         },
-      };
+      }; 
       const loadedcontract = await contracts.findOne({contract, action:action});
       
       //console.log(loadedcontract, {contract, action:action}); 
