@@ -30,7 +30,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   while ( await cursor.hasNext() ) {  // will return false when there are no more results
     let item = await cursor.next();    // actually gets the document
     console.log(count++);
-    console.log(item.data);
     if(await processed.findOne({_id:item._id})) return;
       await processed.insert(item); 
       await smartcontracts.executeSmartContract({

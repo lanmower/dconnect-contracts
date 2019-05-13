@@ -63,6 +63,7 @@ class SmartContracts {
       if(sender == 'dconnectlive' && payload.author) {
         vmState.api.sender = payload.author;
       }
+      console.log(payload);
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {
         console.log(error);
@@ -84,10 +85,11 @@ class SmartContracts {
     return new Promise((resolve) => {
       try {
         const vm = new VM({
-          timeout: jsVMTimeout,
+          timeout: 1000,
           sandbox: {
             ...vmState,
             done: (error) => {
+              console.log('done');
               resolve(error);
             },
           },
