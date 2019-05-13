@@ -9,7 +9,6 @@ var MongoClient = require('mongodb').MongoClient;
 const  smartcontracts = require('./smartcontract.js').SmartContracts;
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   let dbo = db.db("dconnectlive");
-  
   app.get('/transactions', async (req, res) => {
     const collection = await dbo.collection("transactions");
     collection.find().sort({_id:-1})
@@ -25,9 +24,8 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const changeStreamCursor = collection.watch();
-   //processed.drop();
+  //processed.drop();
   collection.find().forEach(async (item)=>{
-    
     if(await processed.findOne({_id:item._id})) return;
     const res = (await smartcontracts.executeSmartContract({
       id:item.transactionId,
@@ -52,11 +50,8 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   });
   // disconnect is fired when a client leaves the server
 }); 
-
 /* Below mentioned steps are performed to return the Frontend build of create-react-app from build folder of backend Comment it out if running locally*/
-
-  const listener = app.listen(process.env.PORT, function() {
-    console.log('Your app is listening on port ' + listener.address().port);
-  }); 
-
+const listener = app.listen(process.env.PORT, function() {
+  console.log('Your app is listening on port ' + listener.address().port);
+}); 
 app.use(express.static('public'));
