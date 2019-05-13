@@ -102,3 +102,4 @@ class SmartContracts {
   }
 }
 module.exports.SmartContracts = SmartContracts;
+ 

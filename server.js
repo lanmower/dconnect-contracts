@@ -55,6 +55,37 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
 
 /* Below mentioned steps are performed to return the Frontend build of create-react-app from build folder of backend Comment it out if running locally*/
 
+const { Api, JsonRpc, RpcError } = require('eosjs');
+const JsSignatureProvider = require('eosjs/dist/eosjs-jssig').default;  // development only
+const fetch = require('node-fetch');                            // node only; not needed in browsers
+const rpc = new JsonRpc('https://api.eosnewyork.io', { fetch, chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906' });
+const { TextEncoder, TextDecoder } = require('util');           // node only; native TextEncoder/Decoder
+const defaultPrivateKey = process.env.SECRET;
+const signatureProvider = new JsSignatureProvider([defaultPrivateKey]);
+const eos = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+
+async function send(from, to, value)  {
+  await eos.transaction({
+         actions: [{
+           account: 'dconnectlive',
+           name: 'set',
+           authorization: [{
+             actor: account.name,
+             permission: 'active',
+           }],
+           data: {
+             app: 'dconnectlive',
+             account: account.name,
+             key: 'send',
+             value:JSON.stringify({as:from, user:to, amount:value})
+           },
+         }]
+       }, {
+         blocksBehind: 9,
+         expireSeconds: 180
+       });
+}
+
 
   const listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
