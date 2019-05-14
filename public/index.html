@@ -11,180 +11,169 @@
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.1/seedrandom.min.js"></script>
     <script
-      src="./bundle.js"
-      type="text/javascript"
-    ></script>
-
+            src="./bundle.js"
+            type="text/javascript"
+            ></script>
     <script type="text/javascript" src="eos.js"></script>
     <link rel="shortcut icon" type="image/png" href="favicon-96x96.png"/>
-</head>
+  </head>
   <body>
-      <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
-        <nav class="uk-navbar-container" uk-navbar style="position: relative; z-index: 980;">
-          <button class="uk-button uk-button-default" type="button">CHOOSE YOUR CONTRACT!!!!!!!</button>
-          <div uk-dropdown="mode: click">
-            <ul class="uk-nav uk-dropdown-nav">
-              <li><a href="#">SAVE 💾</a></li>
-              <li class="uk-nav-divider"></li>
-              <li><a href="#">WIPE 😰</a></li>
-              <li class="uk-nav-divider"></li>
-              <li><a href="#">SEND 💌</a></li>
-              <li class="uk-nav-divider"></li>
-              <li><a href="#">ISSUE ✍</a></li>
-              <li class="uk-nav-divider"></li>
-              <li><a href="#">TEST 😊🔬</a></li>
-            </ul>
-          </div>
-          <div class="uk-navbar-left">
-            <ul class="uk-navbar-nav">
-              <li>
-                <form>
+    <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
+      <nav class="uk-navbar-container" uk-navbar style="position: relative; z-index: 980;">
+        <div class="uk-navbar-left">
+          <ul class="uk-navbar-nav">
+            <button class="uk-button uk-button-default" type="button">CHOOSE YOUR CONTRACT!!!!!!!</button>
+        <div uk-dropdown="mode: click">
+          <ul class="uk-nav uk-dropdown-nav">
+            <li><a href="#" id="save">SAVE 💾</a></li>
+            <li class="uk-nav-divider"></li>
+            <li><a href="#" id="wipe">WIPE 😰</a></li>
+            <li class="uk-nav-divider"></li>
+            <li><a href="#" id="send">SEND 💌</a></li>
+            <li class="uk-nav-divider"></li>
+            <li><a href="#" id="issue">ISSUE✍</a></li>
+            <li class="uk-nav-divider"></li>
+            <li><a href="#" id="test">TEST 🔬</a></li>
+          </ul>
+        </div>
+            <li>
+              <form>
                 <input id="name" name="q"/>
-                  <a href="#" id="save">SAVE</a>
-                  <a href="#" id="test" style="position:absolute; right:25px; top:0px;">TEST</a>
-                </form>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
-      <style>
+                <a href="#" id="save">SAVE</a>
+                <a href="#" id="test" style="position:absolute; right:25px; top:0px;">TEST</a>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <style>
       #editor {
-          position: absolute;
-          top:25px;
-          bottom: 0px;
-          left:0px;
-          right:300px;
-          /*width:100%;*/
-          height:100%;
+        position: absolute;
+        top:25px;
+        bottom: 0px;
+        left:0px;
+        right:300px;
+        /*width:100%;*/
+        height:100%;
       }
       #rpc {
-          position: absolute;
-          top:25px;
-          bottom: 0px;
-          right:0px;
-          width:300px;
-          height:100%;
+        position: absolute;
+        top:25px;
+        bottom: 0px;
+        right:0px;
+        width:300px;
+        height:100%;
       }
-      </style>
-      <div id="editor">done();//your action must end with this</div>
-      <div id="rpc">{"key":"val"}</div>
-      <script>
-          var rpc = ace.edit("rpc");
-          rpc.getSession().setUseWorker(false);
-          rpc.setTheme("ace/theme/monokai");
-          rpc.getSession().setMode("ace/mode/javascript");
-          var editor = ace.edit("editor");
-          editor.getSession().setUseWorker(false);
-          editor.setTheme("ace/theme/monokai");
-          editor.getSession().setMode("ace/mode/javascript");
-          const rng = Math.seedrandom();
-
-        document.getElementById('test').onclick = async()=>{
-            const vmdb = await getJSON('/db/'+account.name);
-            db.addCollection("test");
-            db.test.upsert(vmdb);
-            
-            const vmState = { 
-              api: {
-                sender:"sender",
-                id:"id",
-                action:document.getElementById('name').value,
-                collection:{update:console.log, findOne:db.test.findOne, find:db.test.find },
-                fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-                payload: JSON.parse(rpc.getValue()),
-                random: () => rng(),
-                debug: log => console.log(log), 
-                emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
-                assert: (condition, error) => {
-                  if (!condition && typeof error === 'string') {
-                    results.logs.errors.push(error);
-                  }
-                  return condition;
-                },
-              },
-              done : (error)=>{console.log(error)}
-              
-            };
-            function evalInContext() {
-                const results = {logs:{errors:[],events:[]}}
-                eval('const done=this.done;const api=this.api;'+editor.getValue());
-                console.log(results);
-            }
-          
-            evalInContext.call(vmState);
-        };
-        
-        var getJSON = function(url) {
-          return new Promise((resolve, reject)=>{
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.responseType = 'json';
-            xhr.onload = function() {
-              var status = xhr.status;
-              if (status === 200) {
-                
-                resolve(xhr.response);
-              } else {
-                reject(xhr.response);
+    </style>
+    <div id="editor">done();//your action must end with this</div>
+    <div id="rpc">{"key":"val"}</div>
+    <script>
+      var rpc = ace.edit("rpc");
+      rpc.getSession().setUseWorker(false);
+      rpc.setTheme("ace/theme/monokai");
+      rpc.getSession().setMode("ace/mode/javascript");
+      var editor = ace.edit("editor");
+      editor.getSession().setUseWorker(false);
+      editor.setTheme("ace/theme/monokai");
+      editor.getSession().setMode("ace/mode/javascript");
+      const rng = Math.seedrandom();
+      document.getElementById('test').onclick = async()=>{
+        console.log('test');
+        const vmdb = await getJSON('/db/'+account.name);
+        db.addCollection("test");
+        for(index in vmdb) {
+          db.test.upsert(vmdb[index]);
+        }
+        const vmState = { 
+          api: {
+            sender:"sender",
+            id:"id",
+            action:document.getElementById('name').value,
+            collection:{update:console.log, findOne:(query)=>{return new Promise((resolve,reject)=>{db.test.findOne(query,(err,res)=>{if(err){reject(err);}else {resolve(res);}})})}, find:db.test.find },
+            fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
+            payload: JSON.parse(rpc.getValue()),
+            random: () => rng(),
+            debug: log => console.log(log), 
+            emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
+            assert: (condition, error) => {
+              if (!condition && typeof error === 'string') {
+                results.logs.errors.push(error);
               }
-            };
-            xhr.send();
-          });
-          
+              return condition;
+            },
+          },
+          done : (error)=>{console.log(error)}
         };
-        const getContracts = async()=>{
-          window.contracts = {};
-          const contracts = await getJSON('/db/contract');
-          console.log(contracts);
-          for(index in contracts) {
-            const contract = contracts[index];
-            if(!window.contracts[contract.contract]) window.contracts[contract.contract] = {};
-            window.contracts[contract.contract][contract.action] = contract;
-          }
+        function evalInContext() {
+          const results = {logs:{errors:[],events:[]}}
+          eval('const done=this.done;const api=this.api;'+editor.getValue());
+          console.log(results);
         }
-        getContracts();
-
-        document.getElementById('save').onclick = ()=>{
-          
-          ScatterJS.scatter.connect('dconnectlive').then(connected => {
-            if(!connected) return false;
-            window.scatter = ScatterJS.scatter;
-            const requiredFields = { accounts:[network] };
-            scatter.getIdentity(requiredFields).then(() => {
-                window.account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
-                const eosOptions = { expireInSeconds:60 };
-                window.eos = scatter.eos(network, Eos, eosOptions);
-                eos.transaction({
-                   actions: [{
-                     account: 'dconnectlive',
-                     name: 'set',
-                     authorization: [{
-                       actor: account.name,
-                       permission: 'active',
-                     }],
-                     data: {
-                       app: 'system',
-                       account: account.name,
-                       key: 'setcontract',
-                       value:JSON.stringify({'action':document.getElementById('name').value,'code':editor.getValue()})
-                     },
-                   }]
-                 }, {
-                   blocksBehind: 9,
-                   expireSeconds: 180
-                 });
-                const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
-            }).catch(error => {
-                console.error(error);
-            });
-            return false;
+        evalInContext.call(vmState);
+      };
+      var getJSON = function(url) {
+        return new Promise((resolve, reject)=>{
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.responseType = 'json';
+          xhr.onload = function() {
+            var status = xhr.status;
+            if (status === 200) {
+              resolve(xhr.response);
+            } else {
+              reject(xhr.response);
+            }
+          };
+          xhr.send();
         });
-
-          
+      };
+      const getContracts = async()=>{
+        window.contracts = {};
+        const contracts = await getJSON('/db/contract');
+        console.log(contracts);
+        for(index in contracts) {
+          const contract = contracts[index];
+          if(!window.contracts[contract.contract]) window.contracts[contract.contract] = {};
+          window.contracts[contract.contract][contract.action] = contract;
         }
-      </script>
+      }
+      getContracts();
+      document.getElementById('save').onclick = ()=>{
+        ScatterJS.scatter.connect('dconnectlive').then(connected => {
+          if(!connected) return false;
+          window.scatter = ScatterJS.scatter;
+          const requiredFields = { accounts:[network] };
+          scatter.getIdentity(requiredFields).then(() => {
+            window.account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
+            const eosOptions = { expireInSeconds:60 };
+            window.eos = scatter.eos(network, Eos, eosOptions);
+            eos.transaction({
+              actions: [{
+                account: 'dconnectlive',
+                name: 'set',
+                authorization: [{
+                  actor: account.name,
+                  permission: 'active',
+                }],
+                data: {
+                  app: 'system',
+                  account: account.name,
+                  key: 'setcontract',
+                  value:JSON.stringify({'action':document.getElementById('name').value,'code':editor.getValue()})
+                },
+              }]
+            }, {
+              blocksBehind: 9,
+              expireSeconds: 180
+            });
+            const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
+          }).catch(error => {
+            console.error(error);
+          });
+          return false;
+        });
+      }
+    </script>
   </body>
 </html>
-
-
