@@ -24,7 +24,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   })
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
-    try{processed.drop();}catch(e){}
+  //  try{processed.drop();}catch(e){}
 
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
