@@ -8,6 +8,7 @@ const server = http.createServer(app);
 var MongoClient = require('mongodb').MongoClient;
 const smartcontracts = require('./smartcontract.js').SmartContracts;
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
+  console.log(err);
   let dbo = db.db("dconnectlive");
   app.get('/transactions', async (req, res) => {
     const collection = await dbo.collection("transactions");
@@ -23,10 +24,10 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   })
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
-  const changeStreamCursor = collection.watch();
-  let count = 0;
   const processedData = await processed.findOne();
-  let cursor = collection.find({}).sort({timestamp:1});
+  const changeStreamCursor = collection.watch();
+  let cursor = collection.find({timestamp:{$gt:processedData.timestamp}}).sort({timestamp:1});
+  let count = 0;
   while ( await cursor.hasNext() ) {  // will return false when there are no more results
     let item = await cursor.next();    // actually gets the document
     console.log(item);
