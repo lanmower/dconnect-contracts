@@ -66,17 +66,16 @@
 
         document.getElementById('test').onclick = async()=>{
             const vmdb = await getJSON('/db/'+account.name);
-            console.log(vmdb, '/db/'+account.name);  
+            const collection = new Nedb();
+            collection.insert(vmdb);
             const vmState = { 
               api: {
                 sender:"sender",
                 id:"id",
                 action:document.getElementById('name').value,
-                collection:{find:(query)=>{
-                  console.log("FIND:", query)
-                }, update:(query)=>{console.log("FIND:", query)}, insert:(query)=>{console.log("FIND:", query)}},
+                collection,
                 fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-                payload: rpc.getValue(),
+                payload: JSON.parse(rpc.getValue()),
                 random: () => rng(),
                 debug: log => console.log(log), 
                 emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
@@ -92,8 +91,7 @@
             };
             function evalInContext() {
                 const results = {logs:{errors:[],events:[]}}
-                eval('done();');
-                eval(editor.getValue());
+                eval('const done=this.done;const api=this.api;'+editor.getValue());
                 console.log(results);
             }
           
