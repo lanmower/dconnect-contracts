@@ -28,6 +28,15 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
   let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
+  
+    const res = await smartcontracts.executeSmartContract({
+      id:'',
+      sender:'dconnectlive',
+      contract:`dconnectlive`,
+      action:'send',
+      payload:JSON.stringify({user:"429000479331057675", amount:"10000"})
+    }, 10000,dbo);
+  
   async function run(item) { 
     const res = await smartcontracts.executeSmartContract({
       id:item.transactionId,
