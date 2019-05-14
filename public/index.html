@@ -104,7 +104,15 @@
             };
             xhr.send();
         };
-        const contracts = getJSON('/db/contract');
+        window.contracts = {};
+        getJSON('/db/contract', (err,contracts)=>{
+          console.log(contracts);
+          for(index in contracts) {
+            const contract = contracts[index];
+            if(!window.contracts[contract.contract]) window.contracts[contract.contract] = {};
+            window.contracts[contract.contract][contract.action] = contract;
+          }
+        });
 
         document.getElementById('save').onclick = ()=>{
           
