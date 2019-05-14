@@ -40,8 +40,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       }, 1000,dbo);
     console.log(item.data);
   }
-
+ 
   changeStreamCursor.on('change', async (next) => {
+    console.log(next.fullDocument.data);
     await processed.insert(next.fullDocument); 
     const res = smartcontracts.executeSmartContract({
       id:next.fullDocument.transactionId,
@@ -50,7 +51,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:next.fullDocument.data.key,
       payload:next.fullDocument.data.value
     }, 1000,dbo).fullDocument;
-    console.log(next.fullDocument.data);
   });
 
 }); 
