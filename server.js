@@ -24,23 +24,29 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   })
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
-  const processedData = await processed.findOne();
+    try{processed.drop();}catch(e){}
+
+  const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
   let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
   
   async function run(item) {
-    console.log(item.app, item.key, item.data);
     await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
-    await smartcontracts.executeSmartContract({
+    const res = await smartcontracts.executeSmartContract({
       id:item.transactionId,
       sender:item.authorization[0].actor,
       contract:item.data.app,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo);
+    if(res && res.logs && res.logs.length) console.log(res.logs);
   }
   
-  while ( await cursor.hasNext() ) { run(await cursor.next()); }
+  while ( await cursor.hasNext() ) { 
+    const  item = await cursor.next();
+    console.log('running', item.data.app, item.data.key);
+    run(item);
+  }
  
   collection.watch().on('change', async (next) => {
     run(next.fullDocument);
