@@ -1,5 +1,7 @@
+const http = require('http');
+
+
 const express = require("express");
-const http = require("http");
 var connection_string = process.env.url;
 const port = process.env.PORT || 3000;
 const app = express();
@@ -28,7 +30,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
   let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
-    
   async function run(item) { 
     const res = await smartcontracts.executeSmartContract({
       id:item.transactionId,
@@ -42,16 +43,14 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   } 
   let count =0; 
   while ( await cursor.hasNext() ) { 
-      console.log(count++);
+    console.log(count++);
     const  item = await cursor.next();
     await run(item);
   }
- 
   collection.watch().on('change', async (next) => {
     run(next.fullDocument);
   });
 }); 
-
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
