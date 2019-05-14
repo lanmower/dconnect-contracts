@@ -80,14 +80,15 @@ class SmartContracts {
       return { logs: { errors: [`${e.name}: ${e.message}`] } };
     }
   } 
-
   static runContractCode(vmState, contractCode, jsVMTimeout) {
     return new Promise((resolve) => {
       try {
         let done = false;
         const timeout = setTimeout( ()=>{
               done = true;
+              console.log('timeout');
               resolve();
+              clearTimeout(timeout);
         },jsVMTimeout);
         const vm = new VM({
           timeout: jsVMTimeout,
