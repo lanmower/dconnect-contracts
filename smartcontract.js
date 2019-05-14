@@ -81,15 +81,16 @@ class SmartContracts {
     }
   } 
   static runContractCode(vmState, contractCode, jsVMTimeout) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       try {
         let done = false;
         const timeout = setTimeout( ()=>{
               done = true;
               console.log('timeout');
-              resolve();
+              reject('timeout');
               clearTimeout(timeout);
         },jsVMTimeout);
+        console.log(jsVMTimeout);
         const vm = new VM({
           timeout: jsVMTimeout,
           sandbox: {
