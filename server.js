@@ -39,12 +39,11 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo);
-    if(res && res.logs && res.logs.length) console.log(res.logs);
+    console.log(item, res);
   }
   
   while ( await cursor.hasNext() ) { 
     const  item = await cursor.next();
-    console.log('running', item.data.app, item.data.key);
     run(item);
   }
  
