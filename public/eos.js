@@ -17,6 +17,7 @@ ScatterJS.scatter.connect('dconnectlive').then(connected => {
         window.eos = scatter.eos(network, Eos, eosOptions);
         window.account = account;
         const transactionOptions = { authorization:[`${account.name}@${account.authority}`] };
+      console.log('started')
     }).catch(error => {
         console.error(error);
     });
