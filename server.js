@@ -25,11 +25,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
   //  try{processed.drop();}catch(e){}
-
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
-  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
-  
+  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({_id:1});
   async function run(item) {
     await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
     const res = await smartcontracts.executeSmartContract({
@@ -50,7 +48,6 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   collection.watch().on('change', async (next) => {
     run(next.fullDocument);
   });
-
 }); 
 
 const listener = app.listen(process.env.PORT, function() {
