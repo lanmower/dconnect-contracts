@@ -101,9 +101,8 @@ class SmartContracts {
               resolve(error);
             },
           },
-        });
-        
-        vm.run(contractCode);
+        }); 
+        vm.run(contractCode); 
       } catch (err) {
         resolve({
           logs: {
