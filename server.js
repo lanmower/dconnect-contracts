@@ -25,14 +25,16 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const processedData = await processed.findOne();
-  const changeStreamCursor = collection.watch();
-  let cursor = collection.find({timestamp:{$gt:processedData.timestamp}}).sort({timestamp:1});
-  let count = 0;
+  const changeStreamCursor = collection.watch(); 
+  const afterTime = processedData?processedData.timestamp:0;
+  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:new Date(0)}}).sort({timestamp:1});
+  console.log(afterTime, await collection.find({timestamp:{$exists:true}, timestamp:{$gt:new Date(0)}}).sort({timestamp:1}).count());
+  
   while ( await cursor.hasNext() ) {  // will return false when there are no more results
     let item = await cursor.next();    // actually gets the document
     console.log(item);
     if(await processed.findOne({_id:item._id})) continue;
-      await processed.upsert({}, {timestamp:item.timestamp}, {upsert:true}); 
+      await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
       await smartcontracts.executeSmartContract({
         id:item.transactionId,
         sender:item.authorization[0].actor,
