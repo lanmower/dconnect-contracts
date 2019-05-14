@@ -58,7 +58,7 @@ class SmartContracts {
       }; 
       const loadedcontract = await contracts.findOne({contract, action:action});
       
-      //console.log(loadedcontract, {contract, action:action}); 
+      console.log(loadedcontract, {contract, action:action}); 
       if(!loadedcontract) return results;
       if(sender == 'dconnectlive' && payload.author) {
         vmState.api.sender = payload.author;
