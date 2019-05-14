@@ -85,8 +85,10 @@
               },
             };
             function evalInContext() {
+                const results = {logs:{errors:[],events:[]}}
                 console.log(this); 
-                eval(vmState);
+                eval(editor.getValue());
+                console.log(results);
             }
           
             evalInContext.call(vmState);
