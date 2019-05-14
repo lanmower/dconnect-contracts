@@ -20,13 +20,13 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
     collection.find().sort({_id:-1})
       .pipe(require('JSONStream').stringify())
       .pipe(res.type('json'));
-  })
+  }) 
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const changeStreamCursor = collection.watch();
   let cursor = collection.find().sort({timestamp:1});
   let count = 0;
-  await processed.drop();
+  //await processed.drop();
   while ( await cursor.hasNext() ) {  // will return false when there are no more results
     let item = await cursor.next();    // actually gets the document
     if(await processed.findOne({_id:item._id})) return;
