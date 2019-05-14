@@ -21,6 +21,20 @@
   <body>
       <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
         <nav class="uk-navbar-container" uk-navbar style="position: relative; z-index: 980;">
+          <button class="uk-button uk-button-default" type="button">CHOOSE YOUR CONTRACT!!!!!!!</button>
+          <div uk-dropdown="mode: click">
+            <ul class="uk-nav uk-dropdown-nav">
+              <li><a href="#">SAVE</a></li>
+              <li class="uk-nav-divider"></li>
+              <li><a href="#">WIPE</a></li>
+              <li class="uk-nav-divider"></li>
+              <li><a href="#">SEND</a></li>
+              <li class="uk-nav-divider"></li>
+              <li><a href="#">ISSUE</a></li>
+              <li class="uk-nav-divider"></li>
+              <li><a href="#">TEST</a></li>
+            </ul>
+          </div>
           <div class="uk-navbar-left">
             <ul class="uk-navbar-nav">
               <li>
@@ -68,7 +82,6 @@
 
         document.getElementById('test').onclick = async()=>{
             const vmdb = await getJSON('/db/'+account.name);
-            const collection = new Nedb();
             collection.insert(vmdb);
             
             const vmState = { 
@@ -76,7 +89,7 @@
                 sender:"sender",
                 id:"id",
                 action:document.getElementById('name').value,
-                collection:{findOne:(one,two,three)=>{return new Promise(resolve=>{collection.findOne(one, two, three,(err,res)=>{resolve(res)})})}},
+                collection:{findOne:(one)=>{return new Promise(resolve=>{collection.findOne(one, two, three,(err,res)=>{resolve(res)})})}},
                 fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
                 payload: JSON.parse(rpc.getValue()),
                 random: () => rng(),
