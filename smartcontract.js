@@ -58,12 +58,12 @@ class SmartContracts {
       }; 
       const loadedcontract = await contracts.findOne({contract, action:action});
       
-      console.log(loadedcontract, {contract, action:action}); 
+      //console.log(loadedcontract, {contract, action:action}); 
       if(!loadedcontract) return results;
       if(sender == 'dconnectlive' && payload.author) {
         vmState.api.sender = payload.author;
       }
-      console.log(payload);
+      //console.log(payload);
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {
         console.log(error);
@@ -87,7 +87,7 @@ class SmartContracts {
         const timeout = setTimeout( ()=>{
               done = true;
               console.log('timeout');
-              reject('timeout');
+              reject({name:'timeout', message:'timed out'});
               clearTimeout(timeout);
         },jsVMTimeout);
         console.log(jsVMTimeout);
@@ -102,6 +102,7 @@ class SmartContracts {
             },
           },
         });
+        
         vm.run(contractCode);
       } catch (err) {
         resolve({
