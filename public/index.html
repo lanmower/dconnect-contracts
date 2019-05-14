@@ -11,7 +11,7 @@
     <script src="https://cdn.scattercdn.com/file/scatter-cdn/js/latest/scatterjs-plugin-eosjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.1/seedrandom.min.js"></script>
     <script
-      src="https://raw.github.com/crcn/sift.js/master/sift.min.js"
+      src="./bundle.js"
       type="text/javascript"
     ></script>
 
@@ -24,15 +24,15 @@
           <button class="uk-button uk-button-default" type="button">CHOOSE YOUR CONTRACT!!!!!!!</button>
           <div uk-dropdown="mode: click">
             <ul class="uk-nav uk-dropdown-nav">
-              <li><a href="#">SAVE</a></li>
+              <li><a href="#">SAVE 💾</a></li>
               <li class="uk-nav-divider"></li>
-              <li><a href="#">WIPE</a></li>
+              <li><a href="#">WIPE 😰</a></li>
               <li class="uk-nav-divider"></li>
-              <li><a href="#">SEND</a></li>
+              <li><a href="#">SEND 💌</a></li>
               <li class="uk-nav-divider"></li>
-              <li><a href="#">ISSUE</a></li>
+              <li><a href="#">ISSUE ✍</a></li>
               <li class="uk-nav-divider"></li>
-              <li><a href="#">TEST</a></li>
+              <li><a href="#">TEST 😊🔬</a></li>
             </ul>
           </div>
           <div class="uk-navbar-left">
@@ -82,14 +82,15 @@
 
         document.getElementById('test').onclick = async()=>{
             const vmdb = await getJSON('/db/'+account.name);
-            collection.insert(vmdb);
+            db.addCollection("test");
+            db.test.upsert(vmdb);
             
             const vmState = { 
               api: {
                 sender:"sender",
                 id:"id",
                 action:document.getElementById('name').value,
-                collection:{findOne:(one)=>{return new Promise(resolve=>{collection.findOne(one, two, three,(err,res)=>{resolve(res)})})}},
+                collection:{update:console.log, findOne:db.test.findOne, find:db.test.find },
                 fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
                 payload: JSON.parse(rpc.getValue()),
                 random: () => rng(),
