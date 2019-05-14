@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static('public'));
 const server = http.createServer(app);
 var MongoClient = require('mongodb').MongoClient;
-const  smartcontracts = require('./smartcontract.js').SmartContracts;
+const smartcontracts = require('./smartcontract.js').SmartContracts;
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   let dbo = db.db("dconnectlive");
   app.get('/transactions', async (req, res) => {
@@ -54,5 +54,5 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
 
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
-}); 
+});
 app.use(express.static('public'));

@@ -112,4 +112,4 @@ class SmartContracts {
     }); 
   }
 }
-module.exports.SmartContracts = SmartContracts;
+module.exports.SmartContracts = SmartContracts; 
