@@ -19,7 +19,6 @@
       <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
         <nav class="uk-navbar-container" uk-navbar style="position: relative; z-index: 980;">
           <div class="uk-navbar-left">
-
             <ul class="uk-navbar-nav">
               <li>
                 <form>
@@ -68,12 +67,13 @@
             const vmdb = await getJSON('/db/'+account.name);
             const collection = new Nedb();
             collection.insert(vmdb);
+            
             const vmState = { 
               api: {
                 sender:"sender",
                 id:"id",
                 action:document.getElementById('name').value,
-                collection,
+                collection:{findOne:(one,two,three)=>{return new Promise(resolve=>{collection.findOne(one, two, three,(err,res)=>{resolve(res)})})}},
                 fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
                 payload: JSON.parse(rpc.getValue()),
                 random: () => rng(),
