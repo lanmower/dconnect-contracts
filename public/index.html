@@ -22,10 +22,9 @@
       <nav class="uk-navbar-container" uk-navbar style="position: relative; z-index: 980;">
         <div class="uk-navbar-left">
           <ul class="uk-navbar-nav">
-            <button class="uk-button uk-button-default" type="button">CHOOSE YOUR CONTRACT!!!!!!!</button>
+            <button class="uk-button uk-button-default" type="button">LOAD</button>
         <div uk-dropdown="mode: click">
           <ul id="contracts" class="uk-nav uk-dropdown-nav">
-            
             <!--li>
               <a href="#" id="save">SAVE 💾</a></li>
             <li class="uk-nav-divider"></li>
@@ -133,12 +132,12 @@
       const getContracts = async()=>{
         window.contracts = {};
         const contracts = await getJSON('/db/contract');
-        let html;
+        let html = '';
         for(index in contracts) {
           const contract = contracts[index];
           if(!window.contracts[contract.contract]) window.contracts[contract.contract] = {};
-          window.contracts[contract.contract+"|"+contract.action] = contract;
-          html += `<li class="uk-nav-divider"></li><li><a href="#">${contract.contract+"|"+contract.action}</a></li>`
+          window.contracts[contract.contract][contract.action] = contract;
+          html += `<li class="uk-nav-divider"></li><li onclick="editor.setValue(contracts['${contract.contract}']['${contract.action}'].code)"><a href="#" >${contract.contract+"|"+contract.action}</a></li>`
         }
         document.getElementById('contracts').innerHTML = html;
       }
