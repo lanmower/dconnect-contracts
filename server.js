@@ -11,8 +11,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   console.log(err);
   let dbo = db.db("dconnectlive");
   app.get('/db/*', async (req, res) => {
-    console.log(res.path);
-    const collection = await dbo.collection("transactions");
+    const collection = await dbo.collection(req.path.replace('/db/',''));
     collection.find().sort({_id:-1})
       .pipe(require('JSONStream').stringify())
       .pipe(res.type('json'));
@@ -26,34 +25,25 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const processedData = await processed.findOne();
-  const changeStreamCursor = collection.watch(); 
   const afterTime = processedData?processedData.timestamp:0;
   let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
   
-  while ( await cursor.hasNext() ) {  // will return false when there are no more results
-    let item = await cursor.next();    // actually gets the document
-    if(await processed.findOne({_id:item._id})) continue;
-      await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
-      await smartcontracts.executeSmartContract({
-        id:item.transactionId,
-        sender:item.authorization[0].actor,
-        contract:item.data.app,
-        action:item.data.key,
-        payload:item.data.value      
-      }, 1000,dbo);
-    console.log(item.data);
+  async function run(item) {
+    console.log(item.app, item.key, item.data);
+    await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
+    await smartcontracts.executeSmartContract({
+      id:item.transactionId,
+      sender:item.authorization[0].actor,
+      contract:item.data.app,
+      action:item.data.key,
+      payload:item.data.value      
+    }, 1000,dbo);
   }
+  
+  while ( await cursor.hasNext() ) { run(await cursor.next()); }
  
-  changeStreamCursor.on('change', async (next) => {
-    console.log(next.fullDocument.data);
-    await processed.insert(next.fullDocument); 
-    const res = smartcontracts.executeSmartContract({
-      id:next.fullDocument.transactionId,
-      sender:next.fullDocument.authorization[0].actor,
-      contract:next.fullDocument.data.app,
-      action:next.fullDocument.data.key,
-      payload:next.fullDocument.data.value
-    }, 50,dbo).fullDocument;
+  collection.watch().on('change', async (next) => {
+    run(next.fullDocument);
   });
 
 }); 
