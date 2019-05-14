@@ -10,7 +10,8 @@ const smartcontracts = require('./smartcontract.js').SmartContracts;
 MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60, reconnectInterval: 1000}, async function(err, db) {
   console.log(err);
   let dbo = db.db("dconnectlive");
-  app.get('/transactions', async (req, res) => {
+  app.get('/db/*', async (req, res) => {
+    console.log(res.path);
     const collection = await dbo.collection("transactions");
     collection.find().sort({_id:-1})
       .pipe(require('JSONStream').stringify())
@@ -27,12 +28,10 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   const processedData = await processed.findOne();
   const changeStreamCursor = collection.watch(); 
   const afterTime = processedData?processedData.timestamp:0;
-  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:new Date(0)}}).sort({timestamp:1});
-  console.log(afterTime, await collection.find({timestamp:{$exists:true}, timestamp:{$gt:new Date(0)}}).sort({timestamp:1}).count());
+  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
   
   while ( await cursor.hasNext() ) {  // will return false when there are no more results
     let item = await cursor.next();    // actually gets the document
-    console.log(item);
     if(await processed.findOne({_id:item._id})) continue;
       await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
       await smartcontracts.executeSmartContract({
@@ -54,7 +53,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       contract:next.fullDocument.data.app,
       action:next.fullDocument.data.key,
       payload:next.fullDocument.data.value
-    }, 1000,dbo).fullDocument;
+    }, 50,dbo).fullDocument;
   });
 
 }); 

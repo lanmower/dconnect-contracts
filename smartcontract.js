@@ -88,9 +88,9 @@ class SmartContracts {
         const timeout = setTimeout( ()=>{
               done = true;
               resolve();
-        },1000);
+        },jsVMTimeout);
         const vm = new VM({
-          timeout: 1000,
+          timeout: jsVMTimeout,
           sandbox: {
             ...vmState,
             done: (error) => {
