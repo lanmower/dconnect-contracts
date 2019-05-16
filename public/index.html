@@ -22,27 +22,22 @@
       <nav class="uk-navbar-container" uk-navbar style="position: relative; z-index: 980;">
         <div class="uk-navbar-left">
           <ul class="uk-navbar-nav">
+            <li>
             <button type="button">LOAD</button>
-        <div uk-dropdown="mode: click">
-          <ul id="contracts" class="uk-nav uk-dropdown-nav">
-            <!--li>
-              <a href="#" id="save">SAVE 💾</a></li>
-            <li class="uk-nav-divider"></li>
-            <li><a href="#" id="wipe">WIPE 😰</a></li>
-            <li class="uk-nav-divider"></li>
-            <li><a href="#" id="send">SEND 💌</a></li>
-            <li class="uk-nav-divider"></li>
-            <li><a href="#" id="issue">ISSUE✍</a></li>
-            <li class="uk-nav-divider"></li>
-            <li><a href="#" id="test">TEST 🔬</a></li-->
-          </ul>
-        </div>
+            <li uk-dropdown="mode: click">
+              <ul id="contracts" class="uk-nav uk-dropdown-nav">
+              </ul>
+            </li>
+            </li>
             <li>
               <form>
                 <input id="name" name="q"/>
                 <a href="#" id="save">SAVE</a>
                 <a href="#" id="test" style="position:absolute; right:25px; top:0px;">TEST</a>
               </form>
+            </li>
+            <li id="status">
+              
             </li>
           </ul>
         </div>
@@ -70,6 +65,22 @@
     <div id="editor">done();//your action must end with this</div>
     <div id="rpc">{"key":"val"}</div>
     <script>
+      var getJSON = function(url) {
+        return new Promise((resolve, reject)=>{
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.responseType = 'json';
+          xhr.onload = function() {
+            var status = xhr.status;
+            if (status === 200) {
+              resolve(xhr.response);
+            } else {
+              reject(xhr.response);
+            }
+          };
+          xhr.send();
+        });
+      };
       var rpc = ace.edit("rpc");
       rpc.getSession().setUseWorker(false);
       rpc.setTheme("ace/theme/monokai");
@@ -79,12 +90,14 @@
       editor.setTheme("ace/theme/monokai");
       editor.getSession().setMode("ace/mode/javascript");
       const rng = Math.seedrandom();
-      setInterval(async ()=>{
-        const stats = await getJSON('https://messaround.glitch.me/db/state');
+      doState = async ()=>{
+        const [stats] = await getJSON('https://messaround.glitch.me/db/state');
+        const now = new Date();
         var offset = Date.UTC(now.getFullYear(),now.getMonth(), now.getDate() , 
           now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()) - new Date(stats.blockInfo.timestamp).getTime();
-        console.log(offset);
-      },10000);
+          document.getElementById('status').innerHTML = "&nbsp"+Number(offset/1000/60/60).toFixed(4)+"Hours behind";
+        }
+      doState();setInterval(doState,10000);
       document.getElementById('test').onclick = async()=>{
         console.log('test');
         const vmdb = await getJSON('/db/'+account.name);
@@ -118,22 +131,6 @@
           console.log(results);
         }
         evalInContext.call(vmState);
-      };
-      var getJSON = function(url) {
-        return new Promise((resolve, reject)=>{
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', url, true);
-          xhr.responseType = 'json';
-          xhr.onload = function() {
-            var status = xhr.status;
-            if (status === 200) {
-              resolve(xhr.response);
-            } else {
-              reject(xhr.response);
-            }
-          };
-          xhr.send();
-        });
       };
       const getContracts = async()=>{
         window.contracts = {};
