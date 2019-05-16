@@ -26,13 +26,20 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   })
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
-  const logs = await dbo.collection("processed");
+  const logs = await dbo.collection("logs");
   //  try{processed.drop();}catch(e){} 
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
   let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
   async function run(item) { 
     const before = new Date().getTime();
+    console.log({
+      id:item.transactionId, 
+      sender:item.authorization[0].actor,
+      contract:item.data.app,
+      action:item.data.key,
+      payload:item.data.value      
+    });
     const res = await smartcontracts.executeSmartContract({
       id:item.transactionId, 
       sender:item.authorization[0].actor,
