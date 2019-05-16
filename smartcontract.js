@@ -90,7 +90,6 @@ class SmartContracts {
               reject({name:'timeout', message:'timed out'});
               clearTimeout(timeout);
         },jsVMTimeout);
-        console.log(jsVMTimeout);
         const vm = new VM({
           timeout: jsVMTimeout,
           sandbox: {
