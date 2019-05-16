@@ -38,7 +38,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       contract:item.data.app,
       action:item.data.key,
       payload:item.data.value      
-    }, 10000,dbo); 
+    }, 100,dbo); 
     await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
     await logs.update({}, {res}, {upsert:true}); 
     console.log(item, res);
