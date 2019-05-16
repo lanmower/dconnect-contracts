@@ -30,8 +30,9 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   //  try{processed.drop();}catch(e){} 
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
-  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:processedData.timestamp?processedData.timestamp:new Date(0)}}).sort({timestamp:1});
+  let cursor = collection.find({timestamp:{$exists:true}, timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
   async function run(item) { 
+    const before = new Date().getTime();
     const res = await smartcontracts.executeSmartContract({
       id:item.transactionId, 
       sender:item.authorization[0].actor,
@@ -39,13 +40,14 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       action:item.data.key,
       payload:item.data.value      
     }, 1000,dbo); 
+    console.log(new Date().getTime()-before);
     await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
     await logs.update({}, {res}, {upsert:true}); 
-    console.log(item, res);
-  } 
+    //console.log(item, res);
+  }  
   let count =0; 
   while ( await cursor.hasNext() ) { 
-    console.log(count++);
+    //console.log(count++);
     const  item = await cursor.next();
     await run(item);
   }
