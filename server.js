@@ -26,6 +26,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
   })
   const collection = await dbo.collection("transactions");
   const processed = await dbo.collection("processed");
+  const logs = await dbo.collection("processed");
   //  try{processed.drop();}catch(e){}
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
@@ -39,6 +40,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true,reconnectTries: 60,
       payload:item.data.value      
     }, 10000,dbo);
     await processed.update({}, {timestamp:item.timestamp}, {upsert:true}); 
+    await logs.update({}, {res}, {upsert:true}); 
     console.log(item, res);
   } 
   let count =0; 
