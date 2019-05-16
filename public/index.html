@@ -91,8 +91,7 @@
       doState = async ()=>{
         const [stats] = await getJSON('https://messaround.glitch.me/db/state');
         const now = new Date();
-        var offset = Date.UTC(now.getFullYear(),now.getMonth(), now.getDate() , 
-          now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()) - new Date(stats.blockInfo.timestamp).getTime();
+        var offset = (new Date((new Date()).toUTCString())).getTime() - new Date(stats.blockInfo.timestamp).getTime();
           document.getElementById('status').innerHTML = "&nbsp"+Number(offset/1000/60/60).toFixed(4)+" Hours behind";
         }
       doState();setInterval(doState,10000);
