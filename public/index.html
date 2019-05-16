@@ -34,10 +34,8 @@
                 <input id="name" name="q"/>
                 <a href="#" id="save">SAVE</a>
                 <a href="#" id="test" style="position:absolute; right:25px; top:0px;">TEST</a>
+                <span style="position:absolute; right:70px; top:0px;" id="status"></span>
               </form>
-            </li>
-            <li id="status">
-              
             </li>
           </ul>
         </div>
@@ -95,7 +93,7 @@
         const now = new Date();
         var offset = Date.UTC(now.getFullYear(),now.getMonth(), now.getDate() , 
           now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()) - new Date(stats.blockInfo.timestamp).getTime();
-          document.getElementById('status').innerHTML = "&nbsp"+Number(offset/1000/60/60).toFixed(4)+"Hours behind";
+          document.getElementById('status').innerHTML = "&nbsp"+Number(offset/1000/60/60).toFixed(4)+" Hours behind";
         }
       doState();setInterval(doState,10000);
       document.getElementById('test').onclick = async()=>{
