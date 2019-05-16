@@ -79,6 +79,12 @@
       editor.setTheme("ace/theme/monokai");
       editor.getSession().setMode("ace/mode/javascript");
       const rng = Math.seedrandom();
+      setInterval(async ()=>{
+        const stats = await getJSON('https://messaround.glitch.me/db/state');
+        var offset = Date.UTC(now.getFullYear(),now.getMonth(), now.getDate() , 
+          now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds()) - new Date(stats.blockInfo.timestamp).getTime();
+        console.log(offset);
+      },10000);
       document.getElementById('test').onclick = async()=>{
         console.log('test');
         const vmdb = await getJSON('/db/'+account.name);
