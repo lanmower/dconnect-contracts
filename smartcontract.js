@@ -1,14 +1,14 @@
-var MongoClient = require('mongodb').MongoClient;
 const { VM, VMScript } = require('vm2');
 const seedrandom = require('seedrandom');
+
 class SmartContracts {
   static async executeSmartContract(
   transaction, jsVMTimeout, dbo
   ) {
     try {
-      const {
+      let {
         id,
-        sender,
+        sender, 
         contract,
         action
       } = transaction;
@@ -19,30 +19,37 @@ class SmartContracts {
           events: [],
         },
       }; 
-      let collection = await dbo.collection(contract);
+      let collection = contract?await dbo.collection(contract):null;
       let contracts = await dbo.collection('contract');
       const rng = seedrandom(`${id}`);
       // initialize the state that will be available in the VM
-      var payload = null;
-      //console.log(transaction.payload);
-      try {
-        payload = JSON.parse(transaction.payload);
-      } catch(e) {
-      }
-      if(!payload) return results; 
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
+	  const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.action) return results;
         //console.log("setting contract", {contract:sender, action:payload.action, code:payload.code});
         await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
         results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
         return results;
       }   
+      var payload = null;
+      try {
+	if(transaction.payload) {
+	  const input = JSON.parse(transaction.payload);
+          payload = input.data;
+  	  if(input.author && sender == 'dconnectlive') sender = input.author;
+	  //console.log(payload, "read, sender changed to", input.author);
+	}
+      } catch(e) {
+      }
+      console.log(contract, action, payload);
+      if(!payload) return results; 
       const vmState = { 
         api: { 
           sender,
           id,
           action,
           collection,
+	  time: new Date(transaction.timestamp).getTime(),
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
           payload: payload,
           random: () => rng(),
@@ -58,21 +65,10 @@ class SmartContracts {
       }; 
       const loadedcontract = await contracts.findOne({contract, action:action});
       
-      //console.log(loadedcontract, {contract, action:action}); 
       if(!loadedcontract) return results;
-      if(sender == 'dconnectlive' && payload.author) {
-        vmState.api.sender = payload.author;
-      }
-      //console.log(payload);
       const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
       if (error) {
-        console.log(error);
-        const { name, message } = error;
-        if (name && typeof name === 'string'
-            && message && typeof message === 'string') {
-          return { logs: { errors: [`${name}: ${message}`] } };
-        }
-        return { logs: { errors: ['unknown error'] } };
+        return { logs: { errors: [error] } };
       }
       return results;
     } catch (e) {
@@ -101,11 +97,13 @@ class SmartContracts {
             },
           },
         }); 
+
         vm.run(contractCode); 
       } catch (err) {
+	console.error(err);
         resolve({
           logs: {
-            errors: [err],
+            errors: [err.message],
             events: [],
           },
         });
