@@ -10,11 +10,12 @@ const server = http.createServer(app);
 var MongoClient = require('mongodb').MongoClient;
 var db = null, rdb = null;
 const smartcontracts = require('./smartcontract.js').SmartContracts;
+console.log(process.env.url);
 MongoClient.connect("mongodb://localhost/admin", { useNewUrlParser: true, reconnectTries: 60, reconnectInterval: 2000}, async function(err, dbi) {
 MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconnectTries: 60, reconnectInterval: 2000}, async function(err, rdbi) {
   console.log(err);
   db = dbi;
-  rdb = rdbi;
+  rdb = rdbi;  
   let rdbo = rdb.db("dconnectlive");
   let dbo = db.db("dconnectlive");
   app.get('/db/*', async (req, res) => {
@@ -36,6 +37,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
   let cursor = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
+console.log(cursor.count());
   async function run(item) { 
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();

@@ -41,7 +41,7 @@ class SmartContracts {
 	}
       } catch(e) {
       }
-      console.log(contract, action, payload);
+      //console.log(contract, action, payload);
       if(!payload) return results; 
       const vmState = { 
         api: { 
@@ -51,6 +51,7 @@ class SmartContracts {
           collection,
 	  time: new Date(transaction.timestamp).getTime(),
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
+          getCollection: (name)=>{return dbo.collection(contract+name)},
           payload: payload,
           random: () => rng(),
           debug: log => console.log(log), 
