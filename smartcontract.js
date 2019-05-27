@@ -10,7 +10,8 @@ class SmartContracts {
         id,
         sender, 
         contract,
-        action
+        action,
+	timestamp
       } = transaction;
       // logs used to store events or errors
       const results = {
@@ -42,6 +43,7 @@ class SmartContracts {
       } catch(e) {
       }
       //console.log(contract, action, payload);
+console.log(transaction);
       if(!payload) return results; 
       const vmState = { 
         api: { 
@@ -49,7 +51,7 @@ class SmartContracts {
           id,
           action,
           collection,
-	  time: new Date(transaction.timestamp).getTime(),
+	  time: timestamp,
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
           getCollection: (name)=>{return dbo.collection(contract+name)},
           payload: payload,

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const http = require('http');
-
+console.log('test');
 
 const express = require("express");
 const port = process.env.PORT || 3000;
@@ -47,7 +47,8 @@ console.log(cursor.count());
       sender:item.authorization[0].actor,
       contract:item.data.app,
       action:item.data.key,
-      payload:item.data.value      
+      payload:item.data.value,
+      timestamp:item.timestamp
     }, 2000, dbo); 
     //console.log(new Date().getTime()-before);
     await logs.insert({id:item.transactionId, res, timestamp:item.timestamp}); 
