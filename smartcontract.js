@@ -11,7 +11,7 @@ class SmartContracts {
         sender, 
         contract,
         action,
-	timestamp
+	timestamp 
       } = transaction;
       // logs used to store events or errors
       const results = {
@@ -19,7 +19,7 @@ class SmartContracts {
           errors: [],
           events: [],
         },
-      }; 
+      };
       let collection = contract?await dbo.collection(contract):null;
       let contracts = await dbo.collection('contract');
       const rng = seedrandom(`${id}`);
@@ -55,7 +55,7 @@ console.log(transaction);
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
           getCollection: (name)=>{return dbo.collection(contract+name)},
           payload: payload,
-          random: () => rng(),
+          random: rng,
           debug: log => console.log(log), 
           emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
           assert: (condition, error) => {
