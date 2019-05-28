@@ -37,7 +37,7 @@ class SmartContracts {
 	if(transaction.payload) {
 	  const input = JSON.parse(transaction.payload);
           payload = input.data;
-  	  if(input.author && sender == 'dconnectlive') sender = input.author;
+  	  if(input.author && sender == 'g4ztamjqhage') sender = input.author;
 	  //console.log(payload, "read, sender changed to", input.author);
 	}
       } catch(e) {

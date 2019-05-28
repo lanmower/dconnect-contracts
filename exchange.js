@@ -57,7 +57,7 @@ const name = req.path.replace('/db/','');
 // try{processed.drop();}catch(e){} 
   const processedData = (await processed.findOne())||{timestamp:new Date(0)};
   const afterTime = processedData?processedData.timestamp:0;
-  let cursor = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
+  let cursor = collection.find({timestamp:{$exists:true}, account:'g4ztamjqhage', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
 //console.log(cursor.count());
   async function run(item) { 
     const before = new Date().getTime();
@@ -91,7 +91,7 @@ const name = req.path.replace('/db/','');
     await run(item);
     //console.log(total-(count++));
   }
-  collection.watch({account:'dconnectlive'}).on('change', async (next) => {
+  collection.watch({account:'g4ztamjqhage'}).on('change', async (next) => {
     await run(next.fullDocument);
   });
 }); 
