@@ -54,7 +54,7 @@ const name = req.path.replace('/db/','');
   const collection = await rdbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const logs = await dbo.collection("logs");
-// try{processed.drop();}catch(e){} 
+   //try{processed.drop();}catch(e){} 
   async function run(item) { 
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();
@@ -66,7 +66,7 @@ const name = req.path.replace('/db/','');
       action:item.data.key,
       payload:item.data.value,
       timestamp:item.timestamp
-    }, 2000, dbo); 
+    }, 1000, dbo); 
     //console.log(new Date().getTime()-before);
     await logs.insert({id:item.transactionId, res, timestamp:item.timestamp}); 
     await processed.update({}, {timestamp:item.timestamp}, {upsert:true});
@@ -85,7 +85,8 @@ const name = req.path.replace('/db/','');
   let afterTime = processedData?processedData.timestamp:0;
 	console.log(processedData, afterTime);
   if(new Date(afterTime).getTime() < new Date("2019-05-28T14:05:33.000Z").getTime()) {
-    let cur = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime), $lt:Date("2019-05-28T14:05:33.000Z")}}).sort({timestamp:1});
+    let cur = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime), $lt:new Date("2019-05-28T14:05:33.000Z")}}).sort({timestamp:1});
+    console.log('replaying old logs', await cur.count());
     while ( await cur.hasNext() ) { 
       const  item = await cur.next();
       await run(item);
@@ -94,10 +95,13 @@ const name = req.path.replace('/db/','');
   //run new transactions from dconnectlive
   processedData = (await processed.findOne())||{timestamp:new Date(0)};
   afterTime = processedData?processedData.timestamp:0;
+  console.log(afterTime);
   let cursor = collection.find({timestamp:{$exists:true}, account:'g4ztamjqhage', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
+  console.log('replaying new logs', await cursor.count()); 
   while ( await cursor.hasNext() ) { 
     const  item = await cursor.next();
     await run(item);
+    console.log(item.id);
   }
   collection.watch({account:'g4ztamjqhage'}).on('change', async (next) => {
     await run(next.fullDocument);
