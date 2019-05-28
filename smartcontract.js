@@ -23,10 +23,12 @@ class SmartContracts {
       let collection = contract?await dbo.collection(contract):null;
       let contracts = await dbo.collection('contract');
       const rng = seedrandom(`${id}`);
+      if(new Date(timestamp).getTime() > new Date("2019-05-28T14:05:33.000Z").getTime()) {
+        if(sender == 'dconnectlive') return results;
+        if(sender == 'g4ztamjqhage') sender = 'dconnectlive';
+      }
       // initialize the state that will be available in the VM
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
- 	if(sender == 'dconnectlive') return results;
-	if(sender == 'g4ztamjqhage') sender = 'dconnectlive';
          
 	const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.action) return results;
@@ -40,7 +42,7 @@ class SmartContracts {
 	if(transaction.payload) {
 	  const input = JSON.parse(transaction.payload);
           payload = input.data;
-  	  if(input.author && sender == 'g4ztamjqhage') sender = input.author;
+  	  if(input.author && sender == 'dconnectlive') sender = input.author;
 	  //console.log(payload, "read, sender changed to", input.author);
 	}
       } catch(e) {

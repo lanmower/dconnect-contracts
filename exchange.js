@@ -55,10 +55,6 @@ const name = req.path.replace('/db/','');
   const processed = await dbo.collection("processed");
   const logs = await dbo.collection("logs");
 // try{processed.drop();}catch(e){} 
-  const processedData = (await processed.findOne())||{timestamp:new Date(0)};
-  const afterTime = processedData?processedData.timestamp:0;
-  let cursor = collection.find({timestamp:{$exists:true}, account:'g4ztamjqhage', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
-//console.log(cursor.count());
   async function run(item) { 
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();
@@ -84,12 +80,24 @@ const name = req.path.replace('/db/','');
     }); 
     //console.log(item, res);
   }  
-  const total = await cursor.count();
-  let count =0; 
+  //run old transactions from dconnectlive
+  let processedData = (await processed.findOne())||{timestamp:new Date(0)};
+  let afterTime = processedData?processedData.timestamp:0;
+	console.log(processedData, afterTime);
+  if(new Date(afterTime).getTime() < new Date("2019-05-28T14:05:33.000Z").getTime()) {
+    let cur = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime), $lt:Date("2019-05-28T14:05:33.000Z")}}).sort({timestamp:1});
+    while ( await cur.hasNext() ) { 
+      const  item = await cur.next();
+      await run(item);
+    }
+  } 
+  //run new transactions from dconnectlive
+  processedData = (await processed.findOne())||{timestamp:new Date(0)};
+  afterTime = processedData?processedData.timestamp:0;
+  let cursor = collection.find({timestamp:{$exists:true}, account:'g4ztamjqhage', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
   while ( await cursor.hasNext() ) { 
     const  item = await cursor.next();
     await run(item);
-    //console.log(total-(count++));
   }
   collection.watch({account:'g4ztamjqhage'}).on('change', async (next) => {
     await run(next.fullDocument);
