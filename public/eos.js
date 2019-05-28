@@ -7,7 +7,7 @@ const network = {
     port:443,
     chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
 }
-ScatterJS.scatter.connect('dconnectlive').then(connected => {
+ScatterJS.scatter.connect('dconnect').then(connected => {
     if(!connected) return false;
     window.scatter = ScatterJS.scatter;
     const requiredFields = { accounts:[network] };
