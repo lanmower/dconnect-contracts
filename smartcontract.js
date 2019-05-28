@@ -74,7 +74,7 @@ console.log(transaction);
       const loadedcontract = await contracts.findOne({contract, action:action});
       
       if(!loadedcontract) return results;
-      const error = await SmartContracts.runContractCode(vmState, loadedcontract.code, jsVMTimeout);
+      const error = await SmartContracts.runContractCode(vmState, "try{"+loadedcontract.code+"}catch(e){done();}", jsVMTimeout);
       if (error) {
         return { logs: { errors: [error] } };
       }
