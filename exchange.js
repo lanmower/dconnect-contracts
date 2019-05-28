@@ -81,7 +81,7 @@ const name = req.path.replace('/db/','');
 		//console.log('sending to websocket');
 		clients[ws].send(JSON.stringify(res));
 	}
-    });
+    }); 
     //console.log(item, res);
   }  
   const total = await cursor.count();

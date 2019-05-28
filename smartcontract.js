@@ -25,7 +25,10 @@ class SmartContracts {
       const rng = seedrandom(`${id}`);
       // initialize the state that will be available in the VM
       if(transaction.contract == 'system' && transaction.action == 'setcontract') {
-	  const payload = JSON.parse(transaction.payload);
+ 	if(sender == 'dconnectlive') return results;
+	if(sender == 'g4ztamjqhage') sender = 'dconnectlive';
+         
+	const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.action) return results;
         console.log("setting contract", {contract:sender, action:payload.action});
         await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
