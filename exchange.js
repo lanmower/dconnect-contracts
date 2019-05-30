@@ -56,6 +56,7 @@ const name = req.path.replace('/db/','');
   const logs = await dbo.collection("logs");
    //try{processed.drop();}catch(e){} 
   async function run(item) { 
+    await processed.update({}, {timestamp:item.timestamp}, {upsert:true});
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();
     //console.log(item.data);
@@ -69,7 +70,6 @@ const name = req.path.replace('/db/','');
     }, 1000, dbo); 
     //console.log(new Date().getTime()-before);
     await logs.insert({id:item.transactionId, res, timestamp:item.timestamp}); 
-    await processed.update({}, {timestamp:item.timestamp}, {upsert:true});
     setTimeout(()=>{
       Object.keys(clients).forEach((ws)=>{
   	//console.log(clients[ws].readyState);
@@ -123,6 +123,12 @@ function gracefulShutdown(){
       console.log('MongoDb connection closed.');
     });
 }
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled Rejection at:', reason.stack || reason)
+  // Recommended: send the information to sentry.io
+  // or whatever crash reporting service you use
+})
 
 process.stdin.resume();
 process.on('exit', gracefulShutdown);
