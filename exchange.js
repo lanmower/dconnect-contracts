@@ -95,7 +95,8 @@ const name = req.path.replace('/db/','');
   //run new transactions from dconnectlive
   processedData = (await processed.findOne())||{timestamp:new Date(0)};
   afterTime = processedData?processedData.timestamp:0;
-  let cursor = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime), $gt:new Date("2019-05-28T14:05:33.000Z")}}).sort({timestamp:1});
+console.log("AFTER",afterTime);
+  let cursor = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime)}}).sort({timestamp:1});
   console.log('replaying new logs', await cursor.count()); 
   console.log(afterTime);
   while ( await cursor.hasNext() ) { 

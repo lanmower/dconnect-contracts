@@ -32,7 +32,7 @@ class SmartContracts {
          
 	const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.action) return results;
-        console.log("setting contract", {contract:sender, action:payload.action});
+        console.log("setting contract", sender, payload.action);
         await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
         results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
         return results;
@@ -47,21 +47,23 @@ class SmartContracts {
 	}
       } catch(e) {
       }
-      //console.log(contract, action, payload);
-console.log(transaction);
+      console.info(contract, action);
+      //console.log(transaction);
       if(!payload) return results; 
       const vmState = { 
         api: { 
           sender,
           id,
-          action,
+          action, 
           collection,
-	  time: timestamp,
+	  time: timestamp, 
+	  channel: input.channel,
+          server:input.server,
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
           getCollection: (name)=>{return dbo.collection(contract+name)},
           payload: payload,
           random: rng,
-          debug: log => console.log(log), 
+          debug: log => {},//console.log(log), 
           emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
           assert: (condition, error) => {
             if (!condition && typeof error === 'string') {
@@ -80,7 +82,7 @@ console.log(transaction);
       }
       return results;
     } catch (e) {
-      console.log('error', e); 
+      //console.log('error', e); 
       return { logs: { errors: [`${e.name}: ${e.message}`] } };
     }
   } 
@@ -108,7 +110,7 @@ console.log(transaction);
 
         vm.run(contractCode); 
       } catch (err) {
-	console.error(err);
+	console.error(err.message);
         resolve({
           logs: {
             errors: [err.message],
