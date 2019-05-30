@@ -37,12 +37,14 @@ class SmartContracts {
         results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
         return results;
       }   
-      var payload = null;
+      var payload = null, channel, server;
       try {
 	if(transaction.payload) {
 	  const input = JSON.parse(transaction.payload);
           payload = input.data;
   	  if(input.author && sender == 'dconnectlive') sender = input.author;
+	  channel = input.channel;
+          server = input.server;
 	  //console.log(payload, "read, sender changed to", input.author);
 	}
       } catch(e) {
@@ -51,19 +53,19 @@ class SmartContracts {
       //console.log(transaction);
       if(!payload) return results; 
       const vmState = { 
-        api: { 
+        api: {
           sender,
           id,
           action, 
           collection,
 	  time: timestamp, 
-	  channel: input.channel,
-          server:input.server,
+	  channel: channel,
+          server:server,
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
           getCollection: (name)=>{return dbo.collection(contract+name)},
           payload: payload,
           random: rng,
-          debug: log => {},//console.log(log), 
+          debug: log => console.log(log), 
           emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
           assert: (condition, error) => {
             if (!condition && typeof error === 'string') {
