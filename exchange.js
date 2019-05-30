@@ -16,7 +16,7 @@ app.ws('/', function(ws, req) {
     ws.send(msg);
   });
   ws.onclose = ()=> {
-    delete clients[ws];
+    delete clients[ws]; 
   }
   update.push(
    ws
@@ -25,14 +25,14 @@ app.ws('/', function(ws, req) {
 }); 
 
 var MongoClient = require('mongodb').MongoClient;
-var db = null, rdb = null;
+var db = null, rdb = null, dbinput;
 const smartcontracts = require('./smartcontract.js').SmartContracts;
 
-MongoClient.connect("mongodb://localhost/admin", { useNewUrlParser: true, reconnectTries: 60, reconnectInterval: 2000}, async function(err, dbi) {
 MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconnectTries: 60, reconnectInterval: 2000}, async function(err, rdbi) {
-  console.log(err);
-  db = dbi;
   rdb = rdbi;  
+ MongoClient.connect("mongodb://localhost/admin", { useNewUrlParser: true, reconnectTries: 60, reconnectInterval: 2000}, async function(err, dbi) {
+  console.log(err);
+  db =  dbi;
   let rdbo = rdb.db("dconnectlive");
   let dbo = db.db("dconnectlive");
 
@@ -56,7 +56,7 @@ const name = req.path.replace('/db/','');
   const logs = await dbo.collection("logs");
    //try{processed.drop();}catch(e){} 
   async function run(item) { 
-    await processed.update({}, {timestamp:item.timestamp}, {upsert:true});
+    await processed.update({}, {timestamp:new Date(new Date(item.timestamp).getTime()+1)}, {upsert:true});
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();
     //console.log(item.data);
@@ -107,7 +107,7 @@ console.log("AFTER",afterTime);
     await run(next.fullDocument);
   });
 }); 
-}); 
+});
 const listener = app.listen(port, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });
@@ -123,12 +123,6 @@ function gracefulShutdown(){
       console.log('MongoDb connection closed.');
     });
 }
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.log('Unhandled Rejection at:', reason.stack || reason)
-  // Recommended: send the information to sentry.io
-  // or whatever crash reporting service you use
-})
 
 process.stdin.resume();
 process.on('exit', gracefulShutdown);
