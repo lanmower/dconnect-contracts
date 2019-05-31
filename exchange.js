@@ -5,6 +5,10 @@ console.log('test');
 const express = require("express");
 const port = process.env.PORT || 3000;
 const app = express();
+ 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var expressWs = require('express-ws')(app);
 var clients = {};
@@ -28,6 +32,7 @@ var MongoClient = require('mongodb').MongoClient;
 var db = null, rdb = null, dbinput;
 const smartcontracts = require('./smartcontract.js').SmartContracts;
 
+
 MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconnectTries: 60, reconnectInterval: 2000}, async function(err, rdbi) {
   rdb = rdbi;  
  MongoClient.connect("mongodb://localhost/admin", { useNewUrlParser: true, reconnectTries: 60, reconnectInterval: 2000}, async function(err, dbi) {
@@ -36,15 +41,49 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
   let rdbo = rdb.db("dconnectlive");
   let dbo = db.db("dconnectlive");
 
-   app.get('/db/*', async (req, res) => {
-const name = req.path.replace('/db/','');
+  let dba = dbo.admin();
+  await (await db.db("test")).dropDatabase();
+  var mongoCommand = { copydb: 1, fromhost: "localhost", fromdb: "dconnectlive", todb: "test" };
+  let dbt;
+  await dba.command(mongoCommand, async function(commandErr, data) {
+     if (!commandErr) {
+       console.log(data);
+       dbt = await db.db("test");
 
-	  const col = await dbo.collection(name);
-//console.log(await col.findOne());
-	  col.find().sort({_id:-1})
-      .pipe(require('JSONStream').stringify())
-      .pipe(res.type('json'));
+       console.log('count',await (await dbt.collection('dconnectlivequestion')).find().count());
+     } else {
+       console.log(commandErr.errmsg);
+     }
+  });
+   
+
+   app.get('/db/*', async (req, res) => {
+	const name = req.path.replace('/db/','');
+	const col = await dbo.collection(name);
+	//console.log(await col.findOne());
+	col.find().sort({_id:-1})
+        .pipe(require('JSONStream').stringify())
+        .pipe(res.type('json'));
+   })
+   
+  app.post('/test', async function (req, res) {
+    const body = req.body;
+    let code, payload;
+    if(body.code) {
+	code = body.code;
+	payload = {data:JSON.parse(body.payload)};
+    }
+    const result = await smartcontracts.executeSmartContract({
+      id:Math.random().toString(), 
+      sender:"429000479331057675",
+      code,
+      contract:body.contract,
+      payload:JSON.stringify(payload),
+      timestamp:new Date().toString()
+    }, 1000, dbt); 
+    res.send(result);
   })
+
   app.get('/state', async (req, res) => {
     const collection = await await rdbo.collection("state");
     collection.find().sort({_id:-1})
@@ -54,9 +93,9 @@ const name = req.path.replace('/db/','');
   const collection = await rdbo.collection("transactions");
   const processed = await dbo.collection("processed");
   const logs = await dbo.collection("logs");
-   //try{processed.drop();}catch(e){} 
-  async function run(item) { 
-    await processed.update({}, {timestamp:new Date(new Date(item.timestamp).getTime()+1)}, {upsert:true});
+//  try{processed.drop();}catch(e){}   
+  async function run(item, col) { 
+   try {
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();
     //console.log(item.data);
@@ -81,6 +120,10 @@ const name = req.path.replace('/db/','');
       }, 0); 
     });
     //console.log(item, res);
+   } catch(e) {
+    console.error(e);
+    gracefulShutdown();
+   }
   }  
   //run old transactions from dconnectlive
   let processedData = (await processed.findOne())||{timestamp:new Date(0)};
@@ -88,10 +131,15 @@ const name = req.path.replace('/db/','');
   console.log(processedData, afterTime);
   let cur = collection.find({timestamp:{$exists:true}, account:'dconnectlive', timestamp:{$gt:new Date(afterTime), $lt:new Date("2019-05-28T14:05:33.000Z")}}).sort({timestamp:1});
   console.log('replaying old logs', await cur.count());
-  while ( await cur.hasNext() ) { 
-    const  item = await cur.next();
-    await run(item);
-  }
+  while ( await cur.hasNext() ) {
+    await processed.update({}, {timestamp:afterTime}, {upsert:true});
+    try {
+      const  item = await cur.next();
+      afterTime = new Date(new Date(item.timestamp).getTime());
+      await run(item);
+    } catch(e) {
+    }
+  } 
   //run new transactions from dconnectlive
   processedData = (await processed.findOne())||{timestamp:new Date(0)};
   afterTime = processedData?processedData.timestamp:0;
@@ -100,8 +148,13 @@ console.log("AFTER",afterTime);
   console.log('replaying new logs', await cursor.count()); 
   console.log(afterTime);
   while ( await cursor.hasNext() ) { 
-    const  item = await cursor.next();
-    await run(item);
+    try { 
+      const  item = await cursor.next();
+      afterTime = new Date(new Date(item.timestamp).getTime());
+      await processed.update({}, {timestamp:afterTime}, {upsert:true});
+      await run(item);
+    } catch(e) {
+    }
   }
   collection.watch({account:'g4ztamjqhage'}).on('change', async (next) => {
     await run(next.fullDocument);
@@ -113,18 +166,15 @@ const listener = app.listen(port, function() {
 });
 app.use(express.static('public'));
 
-// Create a function to terminate your app gracefully:
-function gracefulShutdown(){
-    // First argument is [force], see mongoose doc.
-    if(db) db.close(false, () => {
-      console.log('MongoDb connection closed.');
-    });
-    if(rdb) rdb.close(false, () => {
-      console.log('MongoDb connection closed.');
-    });
-}
 
-process.stdin.resume();
+// Create a function to terminate your app gracefully:
+async function gracefulShutdown(){
+    if(db) db.close(false);
+    if(rdb) rdb.close(false);
+    process.exit();
+}
+ 
+process.stdin.resume(); 
 process.on('exit', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);

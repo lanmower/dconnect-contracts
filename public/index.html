@@ -30,6 +30,7 @@
               <form>
                 <input id="name" name="q"/>
                 <a href="#" id="save">SAVE</a>
+                <input id="contractname" name="contractname" style="position:absolute; right:125px; top:0px;"/>
                 <a href="#" id="test" style="position:absolute; right:25px; top:0px;">TEST</a>
                 <span style="position:absolute; right:70px; top:0px;" id="status"></span>
               </form>
@@ -58,8 +59,25 @@
       }
     </style>
     <div id="editor">done();//your action must end with this</div>
-    <div id="rpc">{"key":"val"}</div>
+    <div id="rpc"></div>
     <script>
+
+function postAjax(url, data, success) {
+    var params = typeof data == 'string' ? data : Object.keys(data).map(
+            function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+        ).join('&');
+
+    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.open('POST', url);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
+    };
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(params);
+    return xhr;
+}
+
       var getJSON = function(url) {
         return new Promise((resolve, reject)=>{
           var xhr = new XMLHttpRequest();
@@ -86,47 +104,14 @@
       editor.getSession().setMode("ace/mode/javascript");
       const rng = Math.seedrandom();
       doState = async ()=>{
-        const [stats] = await getJSON('https://messaround.glitch.me/db/state');
+        const [stats] = await getJSON('/db/state');
         const now = new Date();
         var offset = (new Date((new Date()).toUTCString())).getTime() - new Date(stats.blockInfo.timestamp).getTime();
           document.getElementById('status').innerHTML = "&nbsp"+Number(offset/1000/60/60).toFixed(4)+" Hours behind";
         }
       doState();setInterval(doState,10000);
-      document.getElementById('test').onclick = async()=>{
-        console.log('test');
-        const vmdb = await getJSON('/db/'+account.name);
-        db.addCollection("test");
-        for(index in vmdb) {
-          db.test.upsert(vmdb[index]);
-        }
-        const vmState = { 
-          api: {
-            sender:"sender",
-            id:"id",
-            action:document.getElementById('name').value,
-            collection:{update:console.log, findOne:(query)=>{return new Promise((resolve,reject)=>{db.test.findOne(query,(err,res)=>{if(err){reject(err);}else {resolve(res);}})})}, find:db.test.find },
-            fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
-            payload: JSON.parse(rpc.getValue()),
-            random: () => rng(),
-            debug: log => console.log(log), 
-            emit: (event, data) => typeof event === 'string' && results.logs.events.push({ contract, event, data }),
-            assert: (condition, error) => {
-              if (!condition && typeof error === 'string') {
-                results.logs.errors.push(error);
-              }
-              return condition;
-            },
-          },
-          done : (error)=>{console.log(error)}
-        };
-        function evalInContext() {
-          const results = {logs:{errors:[],events:[]}}
-          eval('const done=this.done;const api=this.api;'+editor.getValue());
-          console.log(results);
-        }
-        evalInContext.call(vmState);
-      };
-      const getContracts = async()=>{
+      const getContracts = async()=>{ 
+	console.log('get contracts');
         window.contracts = {};
         const contracts = await getJSON('/db/contract');
         let html = '';
@@ -139,6 +124,12 @@
         document.getElementById('contracts').innerHTML = html;
       }
       getContracts();
+      document.getElementById('test').onclick = async()=>{
+        postAjax('https://dconnect.live/test', {payload:JSON.stringify(rpc.getValue().split(" ")), contract:document.getElementById('contractname').value, code:editor.getValue()}, function(data){ 
+		console.log(JSON.parse(data));
+	alert(JSON.parse(data).logs.message);
+	});
+      };
       document.getElementById('save').onclick = ()=>{
         ScatterJS.scatter.connect('dconnect').then(connected => {
           if(!connected) return false;
