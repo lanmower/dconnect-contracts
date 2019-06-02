@@ -35,7 +35,7 @@ class SmartContracts {
 	const payload = JSON.parse(transaction.payload);
         if(!payload.code || !payload.action) return results;
         //console.log("setting contract", sender, payload.action);
-        await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, action:payload.action, code:payload.code}}, {upsert:true});
+        await contracts.update({contract:sender, action:payload.action}, {$set:{contract:sender, view:payload.view, action:payload.action, code:payload.code}}, {upsert:true});
         results.logs.events.push({contract:"system", event:"setcontract", data:"contract stored"})
         return results;
       }   
