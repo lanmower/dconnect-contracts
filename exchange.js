@@ -42,21 +42,8 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
   let dbo = db.db("dconnectlive");
 
   let dba = dbo.admin();
-  await (await db.db("test")).dropDatabase();
-  var mongoCommand = { copydb: 1, fromhost: "localhost", fromdb: "dconnectlive", todb: "test" };
-  let dbt;
-  await dba.command(mongoCommand, async function(commandErr, data) {
-     if (!commandErr) {
-       console.log(data);
-       dbt = await db.db("test");
-
-       console.log('count',await (await dbt.collection('dconnectlivequestion')).find().count());
-     } else {
-       console.log(commandErr.errmsg);
-     }
-  });
+  let dbt = await db.db("test");
    
-
    app.get('/db/*', async (req, res) => {
 	const name = req.path.replace('/db/','');
 	const col = await dbo.collection(name);
@@ -64,15 +51,19 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
 	col.find().sort({_id:-1})
         .pipe(require('JSONStream').stringify())
         .pipe(res.type('json'));
-   })
+   });
    
   app.post('/test', async function (req, res) {
+
     const body = req.body;
     let code, payload;
     if(body.code) {
 	code = body.code;
 	payload = {data:JSON.parse(body.payload)};
     }
+    await dbt.dropDatabase();
+    await dba.command({ copydb: 1, fromhost: "localhost", fromdb: "dconnectlive", todb: "test" });
+    dbt = await db.db("test");
     const result = await smartcontracts.executeSmartContract({
       id:Math.random().toString(), 
       sender:"429000479331057675",
