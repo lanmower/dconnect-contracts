@@ -61,18 +61,18 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
 	code = body.code;
 	payload = {data:JSON.parse(body.payload)};
     }
+    await dbt.dropDatabase();
+    await dba.command({ copydb: 1, fromhost: "localhost", fromdb: "dconnectlive", todb: "test" });
+    dbt = await db.db("test");
     const result = await smartcontracts.executeSmartContract({
       id:Math.random().toString(), 
-      sender:"429000479331057675",
+      sender:body.sender||"429000479331057675",
       code,
       contract:body.contract,
       payload:JSON.stringify(payload),
       timestamp:new Date().toString()
     }, 1000, dbt); 
     res.send(result);
-    await dbt.dropDatabase();
-    await dba.command({ copydb: 1, fromhost: "localhost", fromdb: "dconnectlive", todb: "test" });
-    dbt = await db.db("test");
   })
 
   app.get('/state', async (req, res) => {
@@ -90,6 +90,15 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
     const before = new Date().getTime();
     const date = new Date(item.timestamp).getTime();
     //console.log(item.data);
+    if(item.account == 'eosio.token') {
+	await logs.insert({id:item.transactionId, res:{
+        logs: {
+          errors: [],
+          events: [],
+          message: 'transaction processed',
+        },
+      }, timestamp:item.timestamp}); 
+    } else {
     const res = await smartcontracts.executeSmartContract({
       id:item.transactionId, 
       sender:item.authorization[0].actor,
@@ -110,6 +119,7 @@ MongoClient.connect(process.env.url, { useNewUrlParser: true, poolSize:1, reconn
 	}
       }, 0); 
     });
+    }
     //console.log(item, res);
    } catch(e) {
     console.error(e);

@@ -9,9 +9,8 @@ class SmartContracts {
       let {
         id,
         sender, 
-	timestamp,
+	timestamp
       } = transaction;
-
       //console.log('count',await (await dbo.collection('dconnectlivequestion')).find().count());
       let action = transaction.action, contract=transaction.contract;
       // logs used to store events or errors
@@ -63,7 +62,7 @@ class SmartContracts {
           server:server,
           fromCollection:async (contract)=>{return (await dbo.collection(contract)).find},
           getCollection: (name)=>{return dbo.collection(contract+name)},
-          payload: payload,
+          payload,
           random: rng,
           debug: log => console.log(log),
 	  message: msg => results.logs.message += msg,
@@ -78,6 +77,8 @@ class SmartContracts {
         },
       };
       let loadedcontract = await contracts.findOne({contract, action:action})||{code};
+      if(loadedcontract.code == '' || !loadedcontract.code) throw new Error(`could not find action ${action} on contract ${contract}`);
+      //console.log(contract, action, loadedcontract, sender, timestamp, payload);
       const msg = await SmartContracts.runContractCode(vmState, "try{const run = async () => {try{\n"+loadedcontract.code+"\n}catch(e){done(e.message)}};run();}catch(e){done(e.message);}", jsVMTimeout);
       if (msg) {
 	results.logs.message += msg;
@@ -90,7 +91,7 @@ class SmartContracts {
   } 
   static runContractCode(vmState, contractCode, jsVMTimeout) {
     return new Promise((resolve, reject) => {
-      const done = (message) => {
+        const done = (message) => {
               clearTimeout(timeout);
               resolve(message);
             };
